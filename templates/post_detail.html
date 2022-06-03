@@ -449,7 +449,7 @@ $(document).ready(function() {
         <p>Дата окончания задачи: {{task.date_of_end}} </p> 
         <div class="input-form">
         <form class="form" action="/update_time" method="post">
-        <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"> <input maxlength="2" id="time" name="hour" type="number" max="50" value="{{task.hours}}" required> минуты <input id="time" maxlength="2" type="number" max="59" name="minute" type="number" value="{{task.minutes}}" required> <button id="req"  type="submit">Отметить</button></p>  </form>      
+        <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"> <input maxlength="2" id="time" name="hour" type="number" min="0" max="50" value="{{task.hours}}" required> минуты <input id="time" maxlength="2" type="number" min="0" max="59" name="minute" type="number" value="{{task.minutes}}" required> <button id="req"  type="submit">Отметить</button></p>  </form>      
         </td>
         </tr>
         {% endif %}
