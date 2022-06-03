@@ -9,9 +9,6 @@ jobs:
     steps:
       - name: Checkout selected branch
         uses: actions/checkout@v3
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%d%m%Y-%H%M')"
       - name: Setup docker buildx
         uses: docker/setup-buildx-action@v2
       - name: Login on Harbor
@@ -30,4 +27,4 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with:
           config: ${{ secrets.KUBECONFIG }}
-          command: -n todo set image deployment/todo-all todo-all=${{ secrets.HARBOR_URL }}/devops_trainee/todo:latest
+          command: -n todo patch deployment todo-all -p "{\"spec\":{\"template\":{\"metadata\":{ \"labels\":{  \"redeploy\":\"$(date +%s)\"}}}}}"
