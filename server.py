@@ -398,7 +398,7 @@ class Roles(db.Model):
 
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(200))
+    description = db.Column(db.String(2000))
     time = db.Column(db.String(200))
     
 

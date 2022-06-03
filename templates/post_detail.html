@@ -152,7 +152,7 @@ $(document).ready(function() {
                 <div class="field">
                   <div class="input-form">
                     <label> Добавить новые задачи для данной таски:</label>
-                    <input pattern="\s*\S+.*"  maxlength="60" type="text" name="title" placeholder="Введите название новой задачи" required><br>
+                    <input pattern="\s*\S+.*"  maxlength="40" type="text" name="title" placeholder="Введите название новой задачи" required><br>
                     <input type="hidden" name="id_task" value={{todo.id}}><br>
                     <textarea  type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил  новую подзадачу на {{todo.title}}"</textarea>
                   </div>
@@ -429,7 +429,7 @@ $(document).ready(function() {
         <tr style="background:  rgba(0,0,0,0.6);" id="{{task.id}}" class="edit_tr">
           <td >
           <span type="tip" id="first_{{task.id}}" class="text">{{task.title_task}}</span>
-          <input type="text" name="name" value="{{task.title_task}}" class="editbox" id="first_input_{{task.id}}" required>
+          <input maxlength="40" type="text" name="name" value="{{task.title_task}}" class="editbox" id="first_input_{{task.id}}" required>
           {% if task.complete == False %}
           <button id="button"><span class="button">Не выполнено</span></button>
           {% else %}
@@ -449,7 +449,7 @@ $(document).ready(function() {
         <p>Дата окончания задачи: {{task.date_of_end}} </p> 
         <div class="input-form">
         <form class="form" action="/update_time" method="post">
-        <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"> <input maxlength="2" id="time" name="hour" type="name"  value="{{task.hours}}"> минуты <input id="time" maxlength="2" type="name" max="59" name="minute" type="hour" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
+        <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"> <input maxlength="2" id="time" name="hour" type="number" max="50" value="{{task.hours}}" required> минуты <input id="time" maxlength="2" type="number" max="59" name="minute" type="number" value="{{task.minutes}}" required> <button id="req"  type="submit">Отметить</button></p>  </form>      
         </td>
         </tr>
         {% endif %}

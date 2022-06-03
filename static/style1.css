@@ -93,7 +93,7 @@ h1{
 top:100%;
 text-align: center;
 color: #fff;
-padding: 9%;
+padding: 4%;
 }
 
 .alert {
@@ -102,6 +102,7 @@ padding: 9%;
 	border-radius: 10px;
     color: white;
 	width: max-content;
+	margin-bottom:8%;
 }
 
 .closebtn {

@@ -371,6 +371,7 @@ a:focus {
 .center {
   text-align: center;
   color: #fff;
+  word-wrap: break-word;
 }
 #team-scroller .designation {
   margin-top: 10px;
@@ -1171,12 +1172,15 @@ justify-content: center;
 }
 
 .input-form textarea {
-	padding: 10px;
-	width: 100%;
-	color: #fff;
-	font-size: 20px;
-	background: none;
-	outline: none;
-	border: 1px solid #fff;
-	box-sizing: border-box;
+  padding: 10px;
+  color: #fff;
+  font-size: 20px;
+  background: none;
+  outline: none;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 100px;
+  max-height: 200px;
+  min-width: 100%;
 }

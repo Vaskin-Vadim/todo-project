@@ -93,7 +93,7 @@ function hide(form) {
           <span class="close_popap">X</span>
           <form class="form" action="/update_user" method="post">
           <div class="input-form"> 
-            <input pattern="\s*\S+.*"  maxlength="70" type="text" name="name" value="{{current}}" required>
+            <input pattern="\s*\S+.*"  maxlength="100" type="text" name="name" value="{{current}}" required>
             <input  type="hidden" name="id_user" value={{user_id}}>
             <input pattern="\s*\S+.*"  maxlength="120" type="text" name="email" value="{{user_email}}" required><br>
             <button class="button" type="submit">Изменить</button>

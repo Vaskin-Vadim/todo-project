@@ -96,7 +96,6 @@ location.href=location.href;
 
 
 
-  <h1>Чат по задаче "{{todo.title}}"</h1>
     <div id='result' class="form2">
 
         <div id="messages" class="messages">
@@ -105,7 +104,7 @@ location.href=location.href;
             {% if chat.id_person == user_id   %}
             <div id="{{chat.id}}"  class="edit_tr"> 
             <span> <table><tr><td id="first_{{chat.id}}" class="text">{{ chat.name }}:  {{ chat.message }}</td><th>{{chat.time}}</th></tr></span>
-            <input type="text" name="name" value="{{chat.message}}" class="editbox" id="first_input_{{chat.id}}" />
+            <input maxlength="350" type="text" name="name" value="{{chat.message}}" class="editbox" id="first_input_{{chat.id}}" />
             </table> 
         </div> 
             {% else %}
