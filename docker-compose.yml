@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+
+  python_project:
+    image: todo
+    restart: always
+    ports:
+      - 8080:8080
+  python_project_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nigerdyai
+      POSTGRES_DB: flask

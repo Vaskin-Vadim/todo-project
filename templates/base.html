@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link href="/static/styles2.css" rel="stylesheet" type="text/css" />
+    <title>Todo</title>
+
+    
+  </head>
+  <body>
+    <header>
+      <div class="logo"></div>
+      <div class="nav">
+        <ul>
+          <li id="show-nails">
+            <a onclick="show_popap('modal-1')">Профиль</a>
+            <a onclick="show_popap('modal-4')">История действий</a>
+            {% if user_status == admin %}
+          <a data-target-modal="#todo_form">Создать новую задачу</a>
+          {% endif %}
+          <a href="/log">Выйти из аккаунта</a>
+          
+        </li>
+          <!-- <li><a href="">Вы вошли как</a></li> -->
+        </ul>
+      </div>
+    </header>
+
+    <script>
+function hide(form) {
+      form.classList.add('hidden')
+	  }
+      </script>
+
+
+
+    <div class="overlay" id="modal-1">
+      <div class="flex-popap">
+        <div class="popap">
+          <span class="close_popap">X</span>
+          <div class="input-form"> 
+          <h2>Имя пользователя: {{current}}</h2>
+          <h2>Email:{{user_email}}</h2>
+          <h2>Role:{{user_status}}</h2><br>
+          <button id="th" type="submit"   onclick="show_popap('modal-2')" >Редактировать профиль</a></button>
+          <!-- <h2>Пол: {{user_gender}}</h2> -->
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="overlay" id="modal-2">
+      <div class="flex-popap">
+        <div class="popap">
+          <span class="close_popap">X</span>
+          <form class="form" action="/update_user" method="post">
+          <div class="input-form"> 
+            <input  maxlength="120" type="text" name="name" value="{{current}}" required>
+            <input  type="hidden" name="id_user" value={{user_id}}>
+            <input   maxlength="120" type="text" name="email" value="{{user_email}}" required><br>
+            <button class="button" type="submit">Изменить</button>
+        </div>
+      </form>
+        </div>
+      </div>
+    </div>
+    <div class="overlay" id="modal-4">
+      <div class="flex-popap">
+        <div class="popap">
+          <span class="close_popap">X</span>
+          
+<h2>История действий</h2><br>
+<form id="pro">
+{% for history in history_list%}
+<h4> {{history.description}} {{history.time}}</h4><br>
+{% endfor%}
+</form>
+</div>
+      </div>
+    </div>
+
+    <div class="head">
+    <div class="modal" id="todo_form">
+      <div class="header">
+        <div class="title">Добавить задачу</div>
+        <button class="btn close-modal">&times;</button>
+      </div>
+      <div class="body">
+        <form class="form-container" action="/add" method="post">
+        <div class="input-form">    
+        <input maxlength="90" type="text" name="title" id="todo_input" placeholder="Введите название задачи" required/>
+      </div>
+      <div class="input-form"> 
+        <textarea maxlength="350" type="description" name="description" id="todo_desc" placeholder="Введите описание задачи" required></textarea> 
+        <input type="hidden" name="status" id="todo_status" value="0" />
+        <input type="hidden" name="activate" id="activate" value="0" />
+        <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил новую задачу"</textarea>
+        <!-- <select>
+          {% for usernames in role_list %}
+          <option name="role" value="{{usernames.name}}">{{usernames.name}}</option>
+          {% endfor %}  
+        </select> -->
+        <button class="btn" type="submit" id="submit" >Add </button>
+      </div>
+    </form>
+      </div>
+    </div>
+  
+    <!-- todo -->
+    
+  
+    
+    <div class="todo-container">
+
+
+      <form class="status" action="/todo_status" method="post" id="0">
+        <h1>Без статуса</h1>
+        {% for todo in todo_list %} 
+        {% if todo.status == '0' %}
+          <div class="todo" draggable="true" role="form">
+            <button id="add_btn"> {{todo.title }} </button>
+            <!-- <button class="btn" type="submit" id="submit" >&#10004 </button> -->
+            <input type="hidden" name="todo_id" data-id={{todo.id}} value={{todo.id}}>
+            <input type="hidden" name="todo_status" data-status={{todo.status}} value='0'>
+            <a href="/show/{{ todo.id }}">&#9776</a>
+          </div>  
+        {% endif %}
+        {% endfor %}
+        </form>
+   
+      <form class="status" action="/todo_status" method="post" id="1">
+        <h1>Не начато</h1>
+        {% for todo in todo_list %} 
+        {% if todo.status == '1' %}
+        <div class="todo" draggable="true" role="form" >
+          <button id="add_btn"> {{todo.title }} </button>
+          <input type="hidden" name="todo_id" data-id={{todo.id}}  value={{todo.id}}>
+          <input type="hidden" name="todo_status" data-status={{todo.status}} value='1'>
+          <a href="/show/{{ todo.id }}">&#9776</a>
+        </div>
+        {% endif %}
+        {% endfor %}  
+      </form> 
+  
+  
+
+      <form class="status" action="/todo_status" method="post" id="2">
+        <h2>В процессе</h1>
+          {% for todo in todo_list %} 
+          {% if todo.status == '2' %}
+        <div class="todo" draggable="true" role="form">
+          <button id="add_btn"> {{todo.title }} </button>
+          <!-- <button class="btn" type="submit" id="submit" >&#10004 </button> -->
+          <input type="hidden" name="todo_id" data-id={{todo.id}} value={{todo.id}}>
+          <input type="hidden" name="todo_status" data-status={{todo.status}} value='2'>
+          <a href="/show/{{ todo.id }}">&#9776</a>
+        </div> 
+          {% endif %} 
+          {% endfor %}  
+        </form>
+
+
+      <form class="status" action="/todo_status" method="post" id="3">
+        <h3>Выполнено</h1>
+          {% for todo in todo_list %} 
+          {% if todo.status == '3' %}
+          <div class="todo" draggable="true" role="form">
+            <button id="add_btn"> {{todo.title }} </button>
+            <input type="hidden" name="todo_id" data-id={{todo.id}}  value={{todo.id}}>
+            <input type="hidden" name="todo_status" data-status={{todo.status}} value='3'>
+            <!-- <button class="btn" type="submit" id="submit" >&#10004 </button> -->
+            <a href="/show/{{ todo.id }}">&#9776</a>
+          </div> 
+            {% endif %}
+          {% endfor %} 
+        </form>
+
+    </div>
+
+    <div id="overlay"></div>
+
+  </div>
+  
+  <script>
+    function show_popap(id_popap) {
+      var id = "#" + id_popap;
+      $(id).addClass('active');
+    }
+    
+    $(".close_popap").click( function(){
+      $(".overlay").removeClass("active");
+    });
+    </script>
+    
+    <script src="/static/scriptfortodo.js"></script>
+  </body>
+</html>

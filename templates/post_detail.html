@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <link href="/static/styles2.css" rel="stylesheet" type="text/css" /> -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="/static/st.css" rel="stylesheet" type="text/css" />
+        <link href="/static/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="/static/font-awesome.min.css" rel="stylesheet" type="text/css" /> -->
+        <!-- <link href="/static/prettyPhoto.css" rel="stylesheet" type="text/css" /> -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+        <title>Todo</title>
+        <style>
+
+           </style>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".edit_tr").click(function() {
+    var ID=$(this).attr('id');
+    $("#first_"+ID).hide();
+    $("#first_input_"+ID).show();
+  }).change(function(){
+      var ID=$(this).attr('id');
+      var first=$("#first_input_"+ID).val();
+      var dataString = 'id='+ ID +'&name='+first;
+      $("#first_"+ID).html('<img src="/staticf/img/loader.gif" />');
+      if(first.length>0){
+        $.ajax({
+          type: "POST",
+          url: "/ajax",
+          data: dataString,
+          cache: false,
+          success: function(html)
+          {
+            $("#first_"+ID).html(first);
+          }
+        });
+      }else{
+        alert('Enter something.');
+      }
+  });
+     
+  $(".editbox").mouseup(function() {
+   return false
+  });
+  $(document).mouseup(function() {
+      $(".editbox").hide();
+      $(".text").show();
+  });
+});
+
+</script>
+
+      </head>
+
+  
+      <!-- <b class="button" href=""></b>	 -->
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <button type="button" onclick="document.location='/todo'">Назад</button>
+  <form class="form1">
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">×</span> 
+      <strong>{{ messages[0] }}</strong>
+    </div>
+    {% endif %}
+    {% endwith %}
+    </form>
+
+  <!-- <b> <a class="button" href="/todo">⇐</b></a> -->
+
+
+
+  {% with errors = get_flashed_messages(category_filter=["error"]) %}
+  {% if errors %}
+  <div class="alert-message block-message error">
+    <a class="close" href="#">×</a>
+    <ul>
+      {%- for msg in errors %}
+      <li>{{ msg }}</li>
+      {% endfor -%}
+    </ul>
+  </div>
+  {% endif %}
+  {% endwith %}
+
+    <div class="overlay" id="modal-1">
+        <div class="flex-popap">
+          <div class="popap">
+            <span class="close_popap">X</span>
+            <form class="form" action="/add_task" method="post">
+                <div class="field">
+                  <div class="input-form">
+                    <label> Добавить новые задачи для данной таски:</label>
+                    <input type="text" name="title" placeholder="Введите название новой задачи" required><br>
+                    <input type="hidden" name="id_task" value={{todo.id}}><br>
+                    <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил  новую подзадачу на {{todo.title}}"</textarea>
+                  </div>
+                    <form>
+                      <div class="input-form">
+                       <p>Выберите дату окончания задачи: 
+                        <input type="date" name="date_of_end" value="2022-06-01"
+                         max="2032-06-04" min="2022-05-16"></p>
+                <button class="button" type="submit">Add</button>
+              </div>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+
+      <div class="overlay" id="modal-3">
+        <div class="flex-popap">
+          <div class="popap">
+            <span class="close_popap">X</span>
+            <form class="form" action="/update_todo" method="post">
+                <div class="field">
+                  <div class="input-form">
+                    <label> Редактирование </label>
+                    <input type="text" name="title" value="{{todo.title}}" required><br>
+                    <input type="hidden" name="id_task" value={{todo.id}}><br>
+                    <textarea  maxlength="350" type="text" name="description">{{todo.description}}</textarea><br><br>
+                    <button class="button" type="submit">Add</button>
+                  </div>
+                
+              </div>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+      <div class="overlay" id="modal-2">
+        <div class="flex-popap">
+          <div class="popap">
+            <span class="close_popap">X</span>
+            <form class="ui form" action="/add_role" method="post">
+                <!-- <label>Добавить сотрудника</label> -->
+                {% if current_status == admin %}
+                <div class="input-form">
+                <input type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
+                <datalist id="role"> 
+                  
+                {% for usernames in role_list %}
+                                                
+                <option name="name" value="{{usernames.name}}">{{usernames.name}}</option>
+                {% endfor %}
+            </datalist>
+
+            <input type="hidden" name="id_task" value={{todo.id}}><br>   
+            <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил сотрудника на задачу {{todo.title}}"</textarea>
+            <button class="ui green button" type="submit">Добавить сотрудника</button>
+            {% endif %} 
+          </div>
+        </form>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+      const datalist = document.querySelector('#role');
+      for (const option of [...datalist.options]) {
+        if (option.textContent.length === 1)
+          option.remove();
+      }
+
+</script>
+
+
+    
+    <section id="services">
+        <div class="container">
+            <div class="box first">
+                <div class="row">
+                    <div class="col-md-4 col-sm-5">
+                      
+                        <div class="center">
+                          
+                            <i class="icon-apple icon-md icon-color1"></i>
+                            <h4>Название задачи</h4>
+     {{todo.title}}
+
+
+
+  </div>
+                    </div><!--/.col-md-4-->
+                    
+                    <div class="col-md-4 col-sm-6">
+
+                        <div class="center">
+                            <i class="icon-android icon-md icon-color2"></i>
+                            <h4>Описание задачи</h4>
+
+                            {{todo.description}}
+
+                        </div>
+                    </div><!--/.col-md-4-->
+                    <div class="col-md-4 col-sm-6">
+                      
+                      <div class="center">
+                        
+                          <i class="icon-android icon-md icon-color4"></i>
+                          <h4>Ход выполнения</h4>
+                          {%if uns == all %}
+                          {%if uns != 0 %}                
+                          <b>Все текущие задания выполнены</b><br>     
+                          {%endif%}         
+                          {%else%}
+                          Выполнено {{uns}}  из {{all}}<br>
+                          <!-- <p>Положение в трекере: {{todo_status}}</p>                        -->
+                          {%endif%}
+                          Потрачено времени: {{sum4}} ч. {{sum5}} м.
+                  </div>
+                  </div>
+                    
+                    <div class="col-md-4 col-sm-6">
+                        <div class="center">
+                            <i class="icon-windows icon-md icon-color3"></i>
+                            <h4>Ответственные</h4>
+                            {% for role in role_list_u %}
+                            <!-- {% if role.id_task == todo.id %} -->
+                            <form class="form"  action="/delete_role" method="post"> 
+                              <input type="hidden" name="name" value="{{ role.name }}"> 
+                              <input type="hidden" name="id_task" value={{todo.id}}> 
+                              
+                            {% if current_status == admin%}  
+                              <button id="button8" type="submit">{{role.name}}</button> 
+                            {%else%}
+                            <label>{{role.name}}</label>
+                            {%endif%}
+                            </form>
+                            <!-- {% endif %} -->
+                            {% endfor %}
+                        </div>
+                        </div>
+
+                        </div>
+
+                    
+<div class="dropdown">
+<!-- <button onclick="myFunction()" class="dropbtn">☰</button>
+  <div id="myDropdown" class="dropdown-content"> --> 
+
+
+                        {% if current_status == admin %}
+                        <button id="button3" onclick="document.location='/delete/{{ todo.id }}'">Удалить задачу</button>
+            
+                        {% else %}  
+                        <form class="form" action="/add_role" method="post">    
+                        <input type="hidden" name="name" value="{{current}}">
+                        <input type="hidden" name="id_task" value={{todo.id}}>   
+                        {% if g != 'yes' %}
+                        <button id="button5" type="submit">Присоединиться к проекту</button>
+                        {% endif %}
+                        <textarea type="hidden" name="history" style="display:none;">Пользователь {{current}} присоединился к задаче {{todo.title}}</textarea>
+                        </form>  
+                        {% endif %} 
+                        
+                        {% if current_status != admin %}
+                        <form class="form" action="/check_user" method="post">    
+                          <button id="button4" >Открыть мессенджер</button> 
+                          <input type="hidden" name="id_task" value={{todo.id}}>   
+                        </form>
+                        {% endif %}
+                         {% for role in role_list_u %}
+                         {% if role.id_task==todo.id %}
+                         {% if current_id == role.id_person %}
+                         {% if current_status != admin %}
+                         <form class="form" action="/delete_role" method="post">               
+                         <input type="hidden" name="id_task" value={{todo.id}}>   
+                         <input type="hidden" name="name" value="{{role.name}}">  
+                         <button id="button3" type="submit">Выйти с проекта</button> 
+                        </form> 
+                        {% endif %} 
+                         {% endif %}
+                         {% endif %}
+                         {% endfor %}
+                        
+
+                        {% if current_status == admin %}
+                        <button id="button4" onclick="document.location='/chat/{{todo.id}}'">Открыть мессенджер</button> 
+                        <button id="button5"  onclick="show_popap('modal-1')">Добавить задачи для данной таски</a></button>   
+                        <button id="button6" onclick="show_popap('modal-2')">Добавить на проект</a></button>   
+                        <button id="button7" onclick="show_popap('modal-3')">Редактировать Задачу</a></button>   
+                        {% endif %}
+                          <!-- <hr> -->
+
+                     </div>
+                <!-- </div> -->
+                 
+                
+         
+
+                    </div><!--/.col-md-4-->
+                    
+
+                </div><!--/.row-->
+
+    </section><!--/#services-->      
+
+    <section id="services1">
+        <div class="container1">
+            <div class="box first1">
+
+
+
+
+  <script>
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+    
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+    
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    </script>
+
+<script>
+    function show_popap(id_popap) {
+      var id = "#" + id_popap;
+      $(id).addClass('active');
+    }
+    
+    $(".close_popap").click( function(){
+      $(".overlay").removeClass("active");
+    });
+    </script>
+
+
+  <table >
+  
+
+        {% for task in topphpframework %}
+        {% if task.id_task == todo.id %}
+
+        <tr style="background:  rgba(0,0,0,0.6);" id="{{task.id}}" class="edit_tr">
+          <td >
+          <span type="tip" id="first_{{task.id}}" class="text">{{task.title_task}}</span>
+          <input type="text" name="name" value="{{task.title_task}}" class="editbox" id="first_input_{{task.id}}" required>
+          {% if task.complete == False %}
+          <button id="button"><span class="button">Не выполнено</span></button>
+          {% else %}
+          <button id="button2"><span class="button">Выполнено</span></button>
+          {% endif %}
+          
+
+          <button id="button" onclick="document.location='/update_task/{{ task.id }}'">Обновить статус</button>
+          <!-- <a class="button" href="/update_task/{{ task.id }}">Update</a>  -->
+          {% if current_status == admin %}
+          <!-- <a class="button" href="/delete_task/{{ task.id }}">Delete</a>    -->
+          <button id="button1" onclick="document.location='/delete_task/{{ task.id }}'">Удалить</button>
+          <!-- <a><p>До: {{task.date_of_end}} </p></a>  -->
+          {% endif %} 
+
+    
+        <p>Дата окончания задачи: {{task.date_of_end}} </p> 
+        <div class="input-form">
+        <form class="form" action="/update_time" method="post">
+        <p >Времени потрачено     часы:  <input id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input type="hidden" id="time" name="task_id" value="{{task.id}}"> <input id="time" name="hour" type="number"  value="{{task.hours}}"> минуты <input id="time" type="number" max="59" name="minute" type="hour" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
+        </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+
+      </table>
+    </div>
+    </div>
+
+
+
+    
+    <!-- <div class="body">
+        <p class="big-header"> {{ todo.title }}</p>
+        <p class="big-header"> {{ todo.description }}</p>
+        <a class="button" href="/delete/{{ todo.id }}">Delete</a>
+    </div>
+     -->
+    </div><!--/.col-md-4-->
+                    
+
+</div><!--/.row-->
+
+</section><!--/#services-->    
+
+    <script src="/static/scriptfortodo.js"></script>
+  </body>
+</html>

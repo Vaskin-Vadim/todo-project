@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+    
+
+    <title>Messenger</title>
+ 
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".edit_tr").click(function() {
+    var ID=$(this).attr('id');
+    $("#first_"+ID).hide();
+    $("#first_input_"+ID).show();
+  }).change(function(){
+      var ID=$(this).attr('id');
+      var first=$("#first_input_"+ID).val();
+      var dataString = 'id='+ ID +'&name='+first;
+      $("#first_"+ID).html('<img src="/staticf/img/loader.gif" />');
+      if(first.length>0){
+        $.ajax({
+          type: "POST",
+          url: "/ajax3",
+          data: dataString,
+          cache: false,
+          success: function(html)
+          {
+            $("#first_"+ID).html(first);
+          }
+        });
+      }else{
+        alert('Enter something.');
+      }
+location.href=location.href;
+  });
+     
+  $(".editbox").mouseup(function() {
+   return false
+  });
+  $(document).mouseup(function() {
+      $(".editbox").hide();
+      $(".text").show();
+  });
+});
+</script>
+
+
+<body>
+    <button type="button" onclick="document.location='/show/{{todo.id}}'">Назад</button>
+    <button type="button" onclick="show_popap('modal-1')">Вложения</button>   
+    <button type="button" onclick="show_popap('modal-2')">Прикрепить файл</button>   
+    
+    <!-- Окно 1 -->
+    
+    <div class="overlay" id="modal-1">
+      <div class="flex-popap">
+        <div class="popap">
+          <span class="close_popap">X</span>
+          <h2>Вложения</h2>
+          <form id="pro"></form>
+          {% for up in up_list %}
+          {% if up.id_chat == todo.id %}
+          <button type="button" onclick="document.location='/download/{{ up.id }}'">{{up.filename}}</button><b> {{up.time}}</b></br> 
+          <!-- <button type="button" href="/download/{{ up.id }}" > </button> <b> {{up.time}}</b></br>   -->
+          {% endif %} 
+          {% endfor %}
+        </form>  
+        </div>
+      </div>
+    </div>
+
+    <div class="form3"> 
+    <div class="overlay" id="modal-2">
+      <div class="flex-popap">
+        <div class="popap">
+          <span class="close_popap">X</span>
+          <form id="upload-file" method="POST" action="/upload" role="form3" enctype="multipart/form-data">
+            <div class="input-form">
+            <input type="file" name="file" required>
+            <input type="hidden" name="id_chat" value={{ todo.id }}><br> 
+            <textarea type="hidden" name="history" style="display:none;"> "Пользователь {{current}} прикрепил вложение в чате по задаче {{todo.title}}"</textarea>
+            <button id="sendButton1" type="submit" >прикрепить</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+        
+
+
+
+
+    <div id='result' class="form2">
+        <div id="messages" class="messages">
+
+            {% for chat in mess_list %}
+            {% if chat.id_chat == todo.id %}
+            {% if chat.id_person == user_id   %}
+            <div id="{{chat.id}}"  class="edit_tr"> 
+            <span> <table><tr><td id="first_{{chat.id}}" class="text">{{ chat.name }}:  {{ chat.message }}</td><th>{{chat.time}}</th></tr></span>
+            <input type="text" name="name" value="{{chat.message}}" class="editbox" id="first_input_{{chat.id}}" />
+            </table> 
+        </div> 
+            {% else %}
+            <span> <table><tr><td id="first_{{chat.id}}" class="text">{{ chat.name }}:  {{ chat.message }}</td><th>{{chat.time}}</th></tr></span>
+            </table>
+            {% endif %} 
+            {% endif %}
+            {% endfor %}  
+
+        </div> 
+
+        </div>      
+    </div>
+    
+
+ <script>
+    
+
+    $(function() {
+    $('#sendButton').click(function() {
+        $.ajax({
+            url: '/add_message',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
+</script> 
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script type="text/javascript">
+  var socket = io.connect('https://' + document.domain + ':' + location.port);
+
+  socket.on( 'connect', function() {
+    socket.emit( 'my event', {
+      data: 'User Connected'
+    } )
+    var form = $( '#ajax' ).on( 'submit', function( e ) {
+      e.preventDefault()
+      let user_name = $( 'input.name' ).val()
+      let mess = 'Файл был успешно прикреплен'
+      
+      let user_input = $( 'textarea.message' ).val()
+      var now = new Date().toLocaleString()
+      var todo = $( 'input.id_chat' ).val()
+      socket.emit( 'my event', {
+        user_name : user_name,
+        message : user_input,
+        now : now,
+        todo : todo,
+        mess : mess
+      } )
+      $( 'textarea.message' ).val( '' ).focus()
+    } )
+  } )
+  socket.on( 'my response', function( msg ) {
+    console.log( msg )
+    console.log( msg.todo )
+    
+     if ('{{todo.id}}' == msg.todo) {
+    if( typeof msg.user_name !== 'undefined' ) {
+    if(  msg.message == '' ) {
+      // msg.message = 'файл был успешно прикреплен'
+      // $( 'h3' ).remove()
+      // $( 'div.messages' ).append( '<table><tr><td>'+msg.user_name+':'+msg.mess+'</td><th>'+msg.now+'</th></tr></table>' )
+    }
+    else{
+      $( 'h3' ).remove()
+      $( 'div.messages' ).append( '<table><tr><td>'+msg.user_name+': '+msg.message+'</td><th>'+msg.now+'</th></tr></table>' )
+    }
+
+  }
+ }
+ $(document).ready(function () {
+    var el = $(".form2")[0];
+    el.scrollTop = el.scrollHeight;
+  });
+  })
+
+</script>
+
+
+<!-- <form action="" method="POST">
+  <input type="text" class="message" placeholder="Messages"/>
+  <input type="submit"/>
+</form> -->
+
+
+    <div class="form"> 
+      <form class="form" id="ajax"  method="post" action="" role="form"> 
+        <div class="input-form">
+            <input id="name" type="hidden" class="name" name="name" value="{{ current }}" ><br>  
+            <textarea  maxlength="350" id="text" class="message" type="text" name="message" placeholder="Enter message"></textarea>
+            <input id="todo_id" type="hidden" class="id_chat" name="id_chat" value="{{ todo.id }}"><br> 
+            <input id="todo_title" type="hidden" class="todo_title" name="todo_title" value="{{ todo.title }}"> 
+             
+            <button id="sendButton" type="submit"  >Отправить</button> 
+              <!-- <input type="submit"/> -->
+
+            </div>
+      </form>
+</div>
+
+<!-- <div id="name" type="text"></div> -->
+
+<script>
+  $(document).ready(function () {
+    var el = $(".form2")[0];
+    el.scrollTop = el.scrollHeight;
+  });
+  
+</script> 
+
+
+
+<script>
+$('#ajax').keypress(function (e) {
+  if (e.which == 13 && !e.shiftKey) {
+    jQuery(this).blur();
+    jQuery('#sendButton').focus().click();
+    return false;    //<---- Add this line
+  }
+});
+</script>
+
+<script>
+function show_popap(id_popap) {
+  var id = "#" + id_popap;
+  $(id).addClass('active');
+}
+
+$(".close_popap").click( function(){
+  $(".overlay").removeClass("active");
+});
+</script>
+
+</body>
+</html>
