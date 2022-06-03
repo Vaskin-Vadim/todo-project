@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  Deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,7 @@ jobs:
           tags: ${{ secrets.HARBOR_URL }}/devops_trainee/todo:${{ steps.date.outputs.date }}
           push: true
       - name: Update image on rancher
-        uses: steebchen/kubectl@v2
+        uses: steebchen/kubectl@v2.0.0
         with:
           config: ${{ secrets.KUBECONFIG }}
           command: -n todo set image deployment/todo-all todo-all=${{ secrets.HARBOR_URL }}/devops_trainee/todo:${{ steps.date.outputs.date }}
