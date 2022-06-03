@@ -48,26 +48,26 @@
                              <div class="input-form">
                                 <div class="form-group">
                                     <label for="inputName" ></label>
-                                    <input type="text" class="form-control"  placeholder="Введите имя пользователя (ФИО)" required="" name="name">
+                                    <input pattern="\s*\S+.*"   maxlength="120" type="text" class="form-control"  placeholder="Введите имя пользователя (ФИО)" required="" name="name">
                                 </div>
                               </div>
                               <div class="input-form">
                                 <div class="form-group">
                                     <label for="inputEmail3" ></label>
-                                    <input type="email" class="form-control" placeholder="Введите адрес электронной почты" required="" name="email">
+                                    <input pattern="\s*\S+.*"   maxlength="120" type="email" class="form-control" placeholder="Введите адрес электронной почты" required="" name="email">
                                 </div>
                               </div>
 
                                 <div class="input-form">
                                 <div class="form-group">
                                     <label for="inputPassword3" ></label>
-                                    <input type="password" class="form-control"  placeholder="Введите пароль" title="At least 6 characters with letters and numbers" required="" name="password">
+                                    <input pattern="\s*\S+.*" minlength="6"    maxlength="120" type="password" class="form-control"  placeholder="Введите пароль" title="At least 6 characters with letters and numbers" required="" name="password">
                                 </div>
                               </div>
                               <div class="input-form">
                                 <div class="form-group">
                                   <label for="inputPassword3" ></label>
-                                  <input type="password" class="form-control"  placeholder="Введите Admin id" title="At least 6 characters with letters and numbers" name="secret">
+                                  <input  type="password" class="form-control"  placeholder="Введите Admin id" title="At least 6 characters with letters and numbers" name="secret">
                               </div>
                             </div>
                             

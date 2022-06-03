@@ -63,7 +63,44 @@ $(document).ready(function() {
 
 <body>
 
-
+  <script>
+    $( document ).ready( function() {
+      var errorMessage = "Please match the requested format.";
+    
+      $( this ).find( "textarea" ).on( "input change propertychange", function() {
+    
+          var pattern = $( this ).attr( "pattern" );
+    
+          if(typeof pattern !== typeof undefined && pattern !== false)
+          {
+              var patternRegex = new RegExp( "^" + pattern.replace(/^\^|\$$/g, '') + "$", "g" );
+    
+              hasError = !$( this ).val().match( patternRegex );
+    
+              if ( typeof this.setCustomValidity === "function") 
+              {
+                  this.setCustomValidity( hasError ? errorMessage : "" );
+              } 
+              else 
+              {
+                  $( this ).toggleClass( "error", !!hasError );
+                  $( this ).toggleClass( "ok", !hasError );
+    
+                  if ( hasError ) 
+                  {
+                      $( this ).attr( "title", errorMessage );
+                  } 
+                  else
+                  {
+                      $( this ).removeAttr( "title" );
+                  }
+              }
+          }
+    
+      });
+    });
+    
+    </script>
 
 
 
@@ -114,9 +151,9 @@ $(document).ready(function() {
                 <div class="field">
                   <div class="input-form">
                     <label> Добавить новые задачи для данной таски:</label>
-                    <input type="text" name="title" placeholder="Введите название новой задачи" required><br>
+                    <input pattern="\s*\S+.*"  maxlength="60" type="text" name="title" placeholder="Введите название новой задачи" required><br>
                     <input type="hidden" name="id_task" value={{todo.id}}><br>
-                    <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил  новую подзадачу на {{todo.title}}"</textarea>
+                    <textarea  type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил  новую подзадачу на {{todo.title}}"</textarea>
                   </div>
                     <form>
                       <div class="input-form">
@@ -140,9 +177,9 @@ $(document).ready(function() {
                 <div class="field">
                   <div class="input-form">
                     <label> Редактирование </label>
-                    <input type="text" name="title" value="{{todo.title}}" required><br>
+                    <input pattern="\s*\S+.*" maxlength="60" type="text" name="title" value="{{todo.title}}" required><br>
                     <input type="hidden" name="id_task" value={{todo.id}}><br>
-                    <textarea  maxlength="350" type="text" name="description">{{todo.description}}</textarea><br><br>
+                    <textarea pattern="\s*\S+.*" maxlength="350" type="text" name="description">{{todo.description}}</textarea><br><br>
                     <button class="button" type="submit">Add</button>
                   </div>
                 
@@ -170,7 +207,7 @@ $(document).ready(function() {
                 <!-- <label>Добавить сотрудника</label> -->
                 {% if current_status == admin %}
                 <div class="input-form">
-                <input type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
+                <input pattern="\s*\S+.*"  maxlength="120" type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
                 <datalist id="role"> 
                   
                 {% for usernames in role_list %}

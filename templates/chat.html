@@ -196,6 +196,51 @@ location.href=location.href;
 </script>
 
 
+<script>
+$( document ).ready( function() {
+  var errorMessage = "Please match the requested format.";
+
+  $( this ).find( "textarea" ).on( "input change propertychange", function() {
+
+      var pattern = $( this ).attr( "pattern" );
+
+      if(typeof pattern !== typeof undefined && pattern !== false)
+      {
+          var patternRegex = new RegExp( "^" + pattern.replace(/^\^|\$$/g, '') + "$", "g" );
+
+          hasError = !$( this ).val().match( patternRegex );
+
+          if ( typeof this.setCustomValidity === "function") 
+          {
+              this.setCustomValidity( hasError ? errorMessage : "" );
+          } 
+          else 
+          {
+              $( this ).toggleClass( "error", !!hasError );
+              $( this ).toggleClass( "ok", !hasError );
+
+              if ( hasError ) 
+              {
+                  $( this ).attr( "title", errorMessage );
+              } 
+              else
+              {
+                  $( this ).removeAttr( "title" );
+              }
+          }
+      }
+
+  });
+});
+
+</script>
+
+
+
+
+
+
+
 <!-- <form action="" method="POST">
   <input type="text" class="message" placeholder="Messages"/>
   <input type="submit"/>
@@ -206,7 +251,7 @@ location.href=location.href;
       <form class="form" id="ajax"  method="post" action="" role="form"> 
         <div class="input-form">
             <input id="name" type="hidden" class="name" name="name" value="{{ current }}" ><br>  
-            <textarea  maxlength="350" id="text" class="message" type="text" name="message" placeholder="Enter message"></textarea>
+            <textarea pattern="\s*\S+.*"   maxlength="350" id="text" class="message" type="text" name="message" placeholder="Enter message"></textarea>
             <input id="todo_id" type="hidden" class="id_chat" name="id_chat" value="{{ todo.id }}"><br> 
             <input id="todo_title" type="hidden" class="todo_title" name="todo_title" value="{{ todo.title }}"> 
              
