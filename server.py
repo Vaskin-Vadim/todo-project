@@ -151,6 +151,8 @@ def update_time():
     if request.method == 'POST':
         gethours = request.form['hour']
         getminutes = request.form['minute']
+        getminutes = abs(int(getminutes))
+        gethours = abs(int(gethours))
         getid = request.form['task_id']
         getide = request.form['todo_id']
         cur.execute("UPDATE task SET hours = %s WHERE id = %s ", [gethours, getid])
