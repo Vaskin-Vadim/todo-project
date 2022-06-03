@@ -42,6 +42,7 @@ $(document).ready(function() {
         });
       }else{
         alert('Enter something.');
+        
       }
   });
      
@@ -448,7 +449,7 @@ $(document).ready(function() {
         <p>Дата окончания задачи: {{task.date_of_end}} </p> 
         <div class="input-form">
         <form class="form" action="/update_time" method="post">
-        <p >Времени потрачено     часы:  <input id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input type="hidden" id="time" name="task_id" value="{{task.id}}"> <input id="time" name="hour" type="number"  value="{{task.hours}}"> минуты <input id="time" type="number" max="59" name="minute" type="hour" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
+        <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"> <input maxlength="2" id="time" name="hour" type="name"  value="{{task.hours}}"> минуты <input id="time" maxlength="2" type="name" max="59" name="minute" type="hour" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
         </td>
         </tr>
         {% endif %}

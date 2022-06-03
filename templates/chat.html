@@ -50,11 +50,13 @@ location.href=location.href;
 
 
 <body>
+  
     <button type="button" onclick="document.location='/show/{{todo.id}}'">Назад</button>
     <button type="button" onclick="show_popap('modal-1')">Вложения</button>   
     <button type="button" onclick="show_popap('modal-2')">Прикрепить файл</button>   
     
     <!-- Окно 1 -->
+    
     
     <div class="overlay" id="modal-1">
       <div class="flex-popap">
@@ -94,10 +96,10 @@ location.href=location.href;
 
 
 
-
+  <h1>Чат по задаче "{{todo.title}}"</h1>
     <div id='result' class="form2">
-        <div id="messages" class="messages">
 
+        <div id="messages" class="messages">
             {% for chat in mess_list %}
             {% if chat.id_chat == todo.id %}
             {% if chat.id_person == user_id   %}

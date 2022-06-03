@@ -605,10 +605,12 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 @app.route("/update_task/<int:task_id>")
 @login_required
 def update_task(task_id):
-
+    current = current_user.name
     task = Task.query.filter_by(id=task_id).first()
+    task_t=task.title_task
     task.complete = not task.complete
     db.session.commit()
+    sent_to("Пользователь " + current + " обновил статус  " + task_t + ".")
     return redirect(url_for('show',todo_id=task.id_task))
 
 
@@ -627,8 +629,11 @@ def delete(todo_id):
 @login_required
 def delete_task(task_id):
     task = Task.query.filter_by(id=task_id).first()
+    current = current_user.name
+    task_t=task.title_task
     db.session.delete(task)
     db.session.commit()
+    sent_to("Администратор " + current + " удалил подзадачу  " + task_t + ".")
     return redirect(url_for('show',todo_id=task.id_task))
 
 
