@@ -34,7 +34,44 @@ function hide(form) {
 	  }
       </script>
 
-
+<script>
+  $( document ).ready( function() {
+    var errorMessage = "Please match the requested format.";
+  
+    $( this ).find( "textarea" ).on( "input change propertychange", function() {
+  
+        var pattern = $( this ).attr( "pattern" );
+  
+        if(typeof pattern !== typeof undefined && pattern !== false)
+        {
+            var patternRegex = new RegExp( "^" + pattern.replace(/^\^|\$$/g, '') + "$", "g" );
+  
+            hasError = !$( this ).val().match( patternRegex );
+  
+            if ( typeof this.setCustomValidity === "function") 
+            {
+                this.setCustomValidity( hasError ? errorMessage : "" );
+            } 
+            else 
+            {
+                $( this ).toggleClass( "error", !!hasError );
+                $( this ).toggleClass( "ok", !hasError );
+  
+                if ( hasError ) 
+                {
+                    $( this ).attr( "title", errorMessage );
+                } 
+                else
+                {
+                    $( this ).removeAttr( "title" );
+                }
+            }
+        }
+  
+    });
+  });
+  
+  </script>
 
     <div class="overlay" id="modal-1">
       <div class="flex-popap">
@@ -56,9 +93,9 @@ function hide(form) {
           <span class="close_popap">X</span>
           <form class="form" action="/update_user" method="post">
           <div class="input-form"> 
-            <input  maxlength="120" type="text" name="name" value="{{current}}" required>
+            <input pattern="\s*\S+.*"  maxlength="70" type="text" name="name" value="{{current}}" required>
             <input  type="hidden" name="id_user" value={{user_id}}>
-            <input   maxlength="120" type="text" name="email" value="{{user_email}}" required><br>
+            <input pattern="\s*\S+.*"  maxlength="120" type="text" name="email" value="{{user_email}}" required><br>
             <button class="button" type="submit">Изменить</button>
         </div>
       </form>
@@ -89,10 +126,10 @@ function hide(form) {
       <div class="body">
         <form class="form-container" action="/add" method="post">
         <div class="input-form">    
-        <input maxlength="90" type="text" name="title" id="todo_input" placeholder="Введите название задачи" required/>
+        <input pattern="\s*\S+.*"  maxlength="60" type="text" name="title" id="todo_input" placeholder="Введите название задачи" required/>
       </div>
       <div class="input-form"> 
-        <textarea maxlength="350" type="description" name="description" id="todo_desc" placeholder="Введите описание задачи" required></textarea> 
+        <textarea pattern="\s*\S+.*" maxlength="350" type="description" name="description" id="todo_desc" placeholder="Введите описание задачи" required></textarea> 
         <input type="hidden" name="status" id="todo_status" value="0" />
         <input type="hidden" name="activate" id="activate" value="0" />
         <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил новую задачу"</textarea>
