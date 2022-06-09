@@ -24,10 +24,7 @@
 
 
 
-
-
-
-            <form class="form1">
+            <form class="form2">
 
               {% with messages = get_flashed_messages() %}
               {% if messages %}
@@ -39,49 +36,19 @@
               {% endwith %}
               </form>
 
-
-
-            <div class="form">
-                          
-                            <form  role="form" autocomplete="off"
-                             action="" method="POST">
-                             <div class="input-form">
-                                <div class="form-group">
-                                    <label for="inputName" ></label>
-                                    <input type="text" class="form-control"  placeholder="Введите имя пользователя (ФИО)" required="" name="name">
-                                </div>
-                              </div>
-                              <div class="input-form">
-                                <div class="form-group">
-                                    <label for="inputEmail3" ></label>
-                                    <input type="email" class="form-control" placeholder="Введите адрес электронной почты" required="" name="email">
-                                </div>
-                              </div>
-
-                                <div class="input-form">
-                                <div class="form-group">
-                                    <label for="inputPassword3" ></label>
-                                    <input type="password" class="form-control"  placeholder="Введите пароль" title="At least 6 characters with letters and numbers" required="" name="password">
-                                </div>
-                              </div>
-                              <div class="input-form">
-                                <div class="form-group">
-                                  <label for="inputPassword3" ></label>
-                                  <input type="password" class="form-control"  placeholder="Введите Admin id" title="At least 6 characters with letters and numbers" name="secret">
-                              </div>
-                            </div>
-                            
-
-                                         <div class="input-form">
-                                <div class="form-group">
-                                    <button type="submit" class="btn" >Зарегистрироваться</button>
-                                    <a class="nav__link active" href="log">Уже есть аккаунт?</a>	
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                    
-
+              <div class="input-form2">
+                <div class="form-group">
+                  <form class="form1" role="form2" id="ajax" autocomplete="off" action="" method="POST">
+                  <label for="inputEmail3" ></label>
+                    <input pattern="\s*\S+.*"   maxlength="120" type="email" class="form-control" placeholder="Введите адрес электронной почты" required="" name="email">
+                    <button type="submit" href="registr1" class="btn" >Зарегистрироваться</button>
+                  </form>
+                  </div>
+                </div>
+  
+              
+              
+      
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>

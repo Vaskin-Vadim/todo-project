@@ -93,14 +93,17 @@ h1{
 top:100%;
 text-align: center;
 color: #fff;
+padding: 4%;
 }
 
 .alert {
-    padding: 20px;
+    padding: 6px;
     background: rgba(0,0,0,.7);
 	border-radius: 10px;
     color: white;
 	width: max-content;
+	margin-bottom: 7%;
+    position: absolute;
 }
 
 .closebtn {
@@ -123,3 +126,56 @@ display: flex;
 align-items: center;  
 justify-content: center;
 }
+
+
+.overlay {
+    position: fixed;
+    z-index: 5;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.6); /* затемнение фона */
+    display: none;
+  }
+  .overlay.active {
+    display: block;
+  }
+  .overlay .flex-popap {
+
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    /* overflow-y: auto; */
+    max-height: 78%;
+  }
+  
+  .overlay .flex-popap .popap::-webkit-scrollbar {
+    width: 0;
+  }
+  
+  
+  .overlay .flex-popap .popap {
+    position: relative;
+    /* background-color: #fff;  цвет фона всплывающего блока */
+    background-color: rgba(0, 0, 0, 4.7);
+    color: #fff;
+    padding: 35px 25px;
+    margin: 0 10px;
+    max-width: max-content; 
+    overflow: auto;
+    width: -webkit-fill-available;
+    border-radius: 10px;
+    max-height: 100%;
+    top: 10%;
+  }
+
+
+  .popap span {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+  }

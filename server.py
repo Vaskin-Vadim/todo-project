@@ -1,4 +1,5 @@
 import code
+from distutils.debug import DEBUG
 import time
 import json
 from datetime import datetime
@@ -13,7 +14,14 @@ import psycopg2 #pip install psycopg2
 import psycopg2.extras
 from flask_socketio import SocketIO
 import requests
+from flask_mail import Mail, Message
+import random
 
+# num = input('login ')
+# pas = ''
+# for x in range(16): #Количество символов (16)
+#     pas = pas + random.choice(list('1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ')) #Символы, из которых будет составлен пароль
+# print('Hello, ', num, 'your password is: ', pas)
 
 def sent_to(text):
     token = "5515854359:AAHA8Mdqxr5ACLPWPwicUqL88gvbZrJcB-c"
@@ -26,12 +34,73 @@ def sent_to(text):
 MAX_FILE_SIZE = 1024 * 1024 + 1
 
 app = Flask(__name__)
+
+
+POSTGRES = {
+    'user': 'postgres',
+    'pw': 'nigerdyai',
+    'db': 'flask',
+    'host': 'todo-db',
+    'port': '5432',
+}
+
+
+DB_HOST = "todo-db"
+DB_NAME = "flask"
+DB_USER = "postgres"
+DB_PASS = "nigerdyai"
+
+
+
+
+
+
 messages_file = "./data/messages.json"
 json_file = open(messages_file, "rb")
 data = json.load(json_file)
 if not "all_messages" in data:
     print(f"ERROR1")
     exit(1)
+app.config.update(
+                DEBUG=True,
+                MAIL_SERVER = "smtp.yandex.ru",
+                MAIL_PORT = 465,
+                MAIL_USE_SSL= True,
+                MAIL_USERNAME = "vaskin2000mordvinrus1@yandex.ru",
+                MAIL_PASSWORD = 'vaskin2000mordvin'
+)
+mail = Mail(app)
+
+@app.route("/send_email")
+def send_mail(message,kuda):
+   msg = Message(
+                'About dashboard',
+                sender = 'vaskin2000mordvinrus1@yandex.ru',
+                recipients = [kuda]
+               )
+   msg.body = message
+   mail.send(msg)
+   
+
+
+
+@app.route("/check",methods=["GET", "POST"])
+def check_mail():
+    if request.method == 'POST':
+        email = request.form.get("email")
+        pas = ''
+        for x in range(16): #Количество символов (16)
+            pas = pas + random.choice(list('1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ')) #Символы, из которых будет составлен пароль
+            # pas='123456'
+        send_mail(pas,email)
+        new_code = Email(code=pas,email=email)
+        db.session.add(new_code)
+        db.session.commit()
+        flash('На ваш адрес электронной почты был отправлен код подтверждения')
+        return render_template("registr1.html",pas=pas,email=email)
+
+
+
 
 all_messages = data["all_messages"]
 
@@ -57,19 +126,7 @@ def chat():
 def get_messages():
     return {"messages": all_messages}
 
-POSTGRES = {
-    'user': 'postgres',
-    'pw': 'nigerdyai',
-    'db': 'flask',
-    'host': 'todo-db',
-    'port': '5432',
-}
 
-
-DB_HOST = "todo-db"
-DB_NAME = "flask"
-DB_USER = "postgres"
-DB_PASS = "nigerdyai"
          
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 
@@ -86,11 +143,14 @@ def ajax():
     if request.method == 'POST':
         getid = request.form['id']
         getname = request.form['name']
-        print(getid)
-        cur.execute("UPDATE task SET title_task = %s WHERE id = %s ", [getname, getid])
-        conn.commit()       
-        cur.close()
-    return jsonify('Record updated successfully')
+        if getname.isspace():
+            return jsonify('Record updated successfully')
+        else:
+            print(getid)
+            cur.execute("UPDATE task SET title_task = %s WHERE id = %s ", [getname, getid])
+            conn.commit()       
+            cur.close()
+            return jsonify('Record updated successfully')
 
 @app.route("/ajax1",methods=["POST","GET"])
 def ajax1():
@@ -151,8 +211,6 @@ def update_time():
     if request.method == 'POST':
         gethours = request.form['hour']
         getminutes = request.form['minute']
-        getminutes = abs(int(getminutes))
-        gethours = abs(int(gethours))
         getid = request.form['task_id']
         getide = request.form['todo_id']
         cur.execute("UPDATE task SET hours = %s WHERE id = %s ", [gethours, getid])
@@ -194,11 +252,14 @@ def ajax3():
     if request.method == 'POST':
         getid = request.form['id']
         getname = request.form['name']
-        print(getid)
-        cur.execute("UPDATE chat SET message = %s WHERE id = %s ", [getname, getid])
-        conn.commit()       
-        cur.close()
-    return jsonify('Record updated successfully')
+        if getname.isspace():
+            return jsonify('Record updated successfully')
+        else:
+            print(getid)
+            cur.execute("UPDATE chat SET message = %s WHERE id = %s ", [getname, getid])
+            conn.commit()       
+            cur.close()
+            return jsonify('Record updated successfully')
 
 @app.route("/todo_status",methods=["POST","GET"])
 def todo_status():
@@ -324,12 +385,16 @@ def login():
 
 
 ######################################################################################
-@app.route("/registr2", methods=["GET", "POST"])
+@app.route("/registr1", methods=["GET", "POST"])
 def index():
     if request.method == 'POST':  # When a user clicks submit button it will come here.
         data = request.form  # request the data from the form in index.html file
         name = data["name"]
         email = data["email"]
+        pas = data["pas"]
+        code = data["code"] 
+        print(pas)
+        print(code)        
         status = data["secret"]
         check = Admin.query.filter_by(code=status).first()   
         password_hash = data["password"]
@@ -338,18 +403,26 @@ def index():
         user = User.query.filter_by(email=email).first()   
         if user: # if a user is found, we want to redirect back to signup page so user can try again
             flash('Email уже используется')
-            return render_template("registr2.html")
+            return render_template("registr1.html")
         if check:
             status = 'admin'
         else:
-            status = 'viewer'        
-        new_data = User(name, email, password_hash,created_on,updated_on,status)
-        db.session.add(new_data)
-        db.session.commit()
-        user_data = User.query.all()
+            status = 'viewer'
+        email_norm = Email.query.filter_by(code=code).first()
+        if email_norm:
+            email=email_norm.email
+            new_data = User(name, email, password_hash,created_on,updated_on,status)
+            Email.query.filter_by(email=email).delete()
+            db.session.add(new_data)
+            db.session.commit()
+            print('Hello')
+            user_data = User.query.all()
         #print(user_data)
-        return redirect('log')
-    return render_template("registr2.html")
+            return redirect('log')
+        else:
+            flash('Неправильно введён код подтверждения почты')
+            return render_template("registr1.html")
+    return render_template("registr1.html")
 
 @app.route("/usersdata")
 @login_required
@@ -390,7 +463,11 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(8))
    
-
+class Email(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(150))
+    email = db.Column(db.String(150))
+    
 
 class Roles(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -428,6 +505,13 @@ def add_role():
         db.session.add(new_description)
         db.session.commit()
         sent_to(description)
+        user_todo = Roles.query.filter_by(id_task=id_task).all()
+        user_email = User.query.all()
+        for i in user_todo:
+            for j in user_email:
+                if (i.id_person == j.id):
+                    email=j.email
+                    send_mail(description,email)
         return redirect(url_for('show',todo_id=id_task))
 
 
@@ -504,7 +588,7 @@ def add_message():
     # print(title)
     time = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S"),
     id_chat = request.form['id_chat']
-    if message == '':
+    if message.isspace() or message=='':
         return redirect(url_for('chat4',todo_id=id_chat))
     else:
         new_message = Chat(name=name,message=message,time=time,id_chat=id_chat, id_person=id_person)
@@ -533,6 +617,13 @@ def add_task():
     db.session.add(new_description)
     db.session.commit()
     sent_to(description)
+    user_todo = Roles.query.filter_by(id_task=id_task).all()
+    user_email = User.query.all()
+    for i in user_todo:
+        for j in user_email:
+            if (i.id_person == j.id):
+                email=j.email
+                send_mail(description,email)
     return redirect(url_for('show',todo_id=id_task))
     
 
@@ -570,6 +661,10 @@ def add():
     db.session.add(new_description)
     db.session.commit()
     sent_to(description)
+    user_email = User.query.all()
+    for j in user_email:
+        email=j.email
+        send_mail(description,email)
     return redirect(url_for("home"))
 
 
@@ -607,10 +702,12 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 @app.route("/update_task/<int:task_id>")
 @login_required
 def update_task(task_id):
-
+    current = current_user.name
     task = Task.query.filter_by(id=task_id).first()
+    task_t=task.title_task
     task.complete = not task.complete
     db.session.commit()
+    sent_to("Пользователь " + current + " обновил статус  " + task_t + ".")
     return redirect(url_for('show',todo_id=task.id_task))
 
 
@@ -629,8 +726,11 @@ def delete(todo_id):
 @login_required
 def delete_task(task_id):
     task = Task.query.filter_by(id=task_id).first()
+    current = current_user.name
+    task_t=task.title_task
     db.session.delete(task)
     db.session.commit()
+    sent_to("Администратор " + current + " удалил подзадачу  " + task_t + ".")
     return redirect(url_for('show',todo_id=task.id_task))
 
 
@@ -663,6 +763,13 @@ def upl():
         db.session.add(new_description)
         db.session.commit()
         sent_to(description)
+        user_todo = Roles.query.filter_by(id_task=id_chat).all()
+        user_email = User.query.all()
+        for i in user_todo:
+            for j in user_email:
+                if (i.id_person == j.id):
+                    email=j.email
+                    send_mail(description,email)
         return redirect(url_for('chat4',todo_id=id_chat))
     return redirect(url_for('chat4',todo_id=id_chat))
 

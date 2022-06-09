@@ -75,6 +75,7 @@ p #time{
   width: 100%;
   padding: 0.5rem 1rem;
   font-size: 1em;
+  text-align: center;
 }
 
 .status h3 {
@@ -87,6 +88,7 @@ p #time{
   width: 100%;
   padding: 0.5rem 1rem;
   font-size: 1em;
+  text-align: center;
 }
 
 
@@ -104,6 +106,7 @@ p #time{
   border-radius: 4px;
   cursor: pointer;
   color:fff;
+  word-wrap: break-word;
 }
 
 

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="/static/style1.css" rel="stylesheet" type="text/css" />
+	<title>Register Page</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+</head> 
+<body>
+<header>
+
+
+
+</header>
+
+
+            <h1 class="text">Регистрация </h1>
+
+            <form class="form1">
+
+              {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">×</span> 
+                <strong>{{ messages[0] }}</strong>
+              </div>
+              {% endif %}
+              {% endwith %}
+              </form>
+              <div class="form">  
+
+      </div>>
+                  <div class="form">  
+
+                            <form  role="form" autocomplete="off"
+                             action="/registr1" method="POST">
+                             <div class="input-form">
+                              <button type="submit" class="btn" onclick="show_popap('modal-3')">Ввести адрес электронной почты</a></button><br><br>
+                                <div class="form-group">
+                                    <label for="inputName" ></label>
+                                    <input pattern="\s*\S+.*"   maxlength="120" type="text" class="form-control"  placeholder="Введите имя пользователя (ФИО)" required="" name="name">
+                                </div>
+                              </div>
+
+                                <div class="input-form">
+                               
+                                <div class="form-group">
+                                    <label for="inputPassword3" ></label>
+                                    <input pattern="\s*\S+.*" minlength="6"    maxlength="120" type="password" class="form-control"  placeholder="Введите пароль" title="At least 6 characters with letters and numbers" required="" name="password">
+                                </div>
+                              </div>
+                              <div class="input-form">
+                                <div class="form-group">
+                                    <label for="inputPassword3" ></label>
+                                    <input pattern="\s*\S+.*" minlength="6"    maxlength="120" type="password" class="form-control"  placeholder="Введите код подтверждения" title="At least 6 characters with letters and numbers" required="" name="code">
+                                </div>
+                              </div>
+                              <div class="input-form">
+                                <div class="form-group">
+                                  <label for="inputPassword3" ></label>
+                                  <input  type="password" class="form-control"  placeholder="Введите Admin id" title="At least 6 characters with letters and numbers" name="secret">
+                                  <input type="hidden" value="{{email}}" name="email">
+                                  <input type="hidden" value="{{pas}}" name="pas">
+                                   
+                                </div>
+                            </div>
+                            
+
+                                         <div class="input-form">
+                                <div class="form-group">
+                                 
+                                    <button type="submit" class="btn" >Зарегистрироваться</button>
+                                   
+                                    
+                                    <a class="nav__link active" href="log">Уже есть аккаунт?</a>	
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+
+                        <div class="overlay" id="modal-3">
+                          <div class="flex-popap">
+                            <div class="popap">
+                              <span class="close_popap">X</span>
+                              <form class="form1" role="form2" id="ajax" autocomplete="off" action="/check" method="POST">
+                                <div class="input-form">
+                                  <div class="form-group">
+                                    
+                                    <label for="inputEmail3" ></label>
+                                      <input id="qwe" pattern="\s*\S+.*"   maxlength="120" type="email" class="form-control" placeholder="Введите адрес электронной почты" required="" name="email">
+                                      <button type="submit" class="btn" >Подтвердить</button>
+                                   
+                                    </div>
+                                  </div>
+                                </form>
+                            </div>
+                          </div>
+                        </div>                 
+                        <script>
+                          function show_popap(id_popap) {
+                            var id = "#" + id_popap;
+                            $(id).addClass('active');
+                          }
+                          
+                          $(".close_popap").click( function(){
+                            $(".overlay").removeClass("active");
+                          });
+                          </script>
+                      
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</body>
+</html>

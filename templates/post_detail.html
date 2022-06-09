@@ -41,8 +41,8 @@ $(document).ready(function() {
           }
         });
       }else{
-        alert('Enter something.');
       }
+      location.href=location.href;
   });
      
   $(".editbox").mouseup(function() {
@@ -63,7 +63,44 @@ $(document).ready(function() {
 
 <body>
 
-
+  <script>
+    $( document ).ready( function() {
+      var errorMessage = "Please match the requested format.";
+    
+      $( this ).find( "textarea" ).on( "input change propertychange", function() {
+    
+          var pattern = $( this ).attr( "pattern" );
+    
+          if(typeof pattern !== typeof undefined && pattern !== false)
+          {
+              var patternRegex = new RegExp( "^" + pattern.replace(/^\^|\$$/g, '') + "$", "g" );
+    
+              hasError = !$( this ).val().match( patternRegex );
+    
+              if ( typeof this.setCustomValidity === "function") 
+              {
+                  this.setCustomValidity( hasError ? errorMessage : "" );
+              } 
+              else 
+              {
+                  $( this ).toggleClass( "error", !!hasError );
+                  $( this ).toggleClass( "ok", !hasError );
+    
+                  if ( hasError ) 
+                  {
+                      $( this ).attr( "title", errorMessage );
+                  } 
+                  else
+                  {
+                      $( this ).removeAttr( "title" );
+                  }
+              }
+          }
+    
+      });
+    });
+    
+    </script>
 
 
 
@@ -114,9 +151,9 @@ $(document).ready(function() {
                 <div class="field">
                   <div class="input-form">
                     <label> Добавить новые задачи для данной таски:</label>
-                    <input type="text" name="title" placeholder="Введите название новой задачи" required><br>
+                    <input pattern="\s*\S+.*"  maxlength="60" type="text" name="title" placeholder="Введите название новой задачи" required><br>
                     <input type="hidden" name="id_task" value={{todo.id}}><br>
-                    <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил  новую подзадачу на {{todo.title}}"</textarea>
+                    <textarea  type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил  новую подзадачу на {{todo.title}}"</textarea>
                   </div>
                     <form>
                       <div class="input-form">
@@ -140,9 +177,9 @@ $(document).ready(function() {
                 <div class="field">
                   <div class="input-form">
                     <label> Редактирование </label>
-                    <input type="text" name="title" value="{{todo.title}}" required><br>
+                    <input pattern="\s*\S+.*" maxlength="60" type="text" name="title" value="{{todo.title}}" required><br>
                     <input type="hidden" name="id_task" value={{todo.id}}><br>
-                    <textarea  maxlength="350" type="text" name="description">{{todo.description}}</textarea><br><br>
+                    <textarea pattern="\s*\S+.*" maxlength="350" type="text" name="description">{{todo.description}}</textarea><br><br>
                     <button class="button" type="submit">Add</button>
                   </div>
                 
@@ -170,7 +207,7 @@ $(document).ready(function() {
                 <!-- <label>Добавить сотрудника</label> -->
                 {% if current_status == admin %}
                 <div class="input-form">
-                <input type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
+                <input pattern="\s*\S+.*"  maxlength="120" type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
                 <datalist id="role"> 
                   
                 {% for usernames in role_list %}
@@ -382,16 +419,18 @@ $(document).ready(function() {
     </script>
 
 
-  <table >
+
   
 
         {% for task in topphpframework %}
         {% if task.id_task == todo.id %}
-
-        <tr style="background:  rgba(0,0,0,0.6);" id="{{task.id}}" class="edit_tr">
+        <div style="background:  rgba(0,0,0,0.6);">
+        <table >
+        <tr  id="{{task.id}}" class="edit_tr">
           <td >
           <span type="tip" id="first_{{task.id}}" class="text">{{task.title_task}}</span>
           <input type="text" name="name" value="{{task.title_task}}" class="editbox" id="first_input_{{task.id}}" required>
+          
           {% if task.complete == False %}
           <button id="button"><span class="button">Не выполнено</span></button>
           {% else %}
@@ -406,18 +445,21 @@ $(document).ready(function() {
           <button id="button1" onclick="document.location='/delete_task/{{ task.id }}'">Удалить</button>
           <!-- <a><p>До: {{task.date_of_end}} </p></a>  -->
           {% endif %} 
-
-    
-        <p>Дата окончания задачи: {{task.date_of_end}} </p> 
+        </td>
+      </tr>
+        </table>
+      
         <div class="input-form">
         <form class="form" action="/update_time" method="post">
-        <p >Времени потрачено     часы:  <input id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input type="hidden" id="time" name="task_id" value="{{task.id}}"> <input id="time" name="hour" type="number"  value="{{task.hours}}"> минуты <input id="time" type="number" max="59" name="minute" type="hour" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
-        </td>
-        </tr>
+
+          <p>Дата окончания задачи: {{task.date_of_end}} </p> 
+          <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"> <input maxlength="2" id="time" name="hour" type="number" min="0" max="50"  value="{{task.hours}}"> минуты <input id="time" maxlength="2" type="number" min="0" max="59" name="minute" type="number" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
+        </div>
+      </div>
         {% endif %}
         {% endfor %}
 
-      </table>
+
     </div>
     </div>
 
