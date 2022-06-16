@@ -5,6 +5,7 @@ body {
   padding-top: 1%;
   background: linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)), url(../static/images/666.jpg); 
 	background-attachment: fixed;
+  background-size: cover;
 }
 h1,
 h2,
@@ -371,6 +372,7 @@ a:focus {
 .center {
   text-align: center;
   color: #fff;
+  word-wrap:break-word;
 }
 #team-scroller .designation {
   margin-top: 10px;
@@ -917,7 +919,7 @@ button[type="button"] {
 	border: 1px solid #fff;
 	box-sizing: border-box;
   width: 100%;
-	
+  margin-top: 1%;
 }
 
 .input-form  {
@@ -1022,6 +1024,7 @@ button[id="button"] {
 
 button[id="button1"] {
   margin-left: 12px;  
+  /* margin-right: 1%;   */
 	color: #fff;
 	/* font-weight: bold;
 	text-transform: uppercase; */
@@ -1043,14 +1046,14 @@ button[id="button2"] {
 	/* font-weight: bold; */
 	/* text-transform: uppercase; */
 	border: none;
-	background: #26d812;
+	background: #254893;
 	transition: .3s;
 	padding: 5px;
   float: right;
 	/* width: 100%; */
 }
  button[id="button2"]:hover {
-	background: #2e6b18;
+	background: #030437;
 }
 
 

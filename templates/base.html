@@ -10,24 +10,26 @@
     
   </head>
   <body>
+
+
     <header>
       <div class="logo"></div>
       <div class="nav">
         <ul>
           <li id="show-nails">
+            <a href="/dashboards">Вернуться назад</a>
             <a onclick="show_popap('modal-1')">Профиль</a>
             <a onclick="show_popap('modal-4')">История действий</a>
             {% if user_status == admin %}
           <a data-target-modal="#todo_form">Создать новую задачу</a>
           {% endif %}
-          <a href="/log">Выйти из аккаунта</a>
+          
           
         </li>
           <!-- <li><a href="">Вы вошли как</a></li> -->
         </ul>
       </div>
     </header>
-
     <script>
 function hide(form) {
       form.classList.add('hidden')
@@ -73,14 +75,18 @@ function hide(form) {
   
   </script>
 
+
+
+
+
     <div class="overlay" id="modal-1">
       <div class="flex-popap">
         <div class="popap">
           <span class="close_popap">X</span>
           <div class="input-form"> 
           <h2>Имя пользователя: {{current}}</h2>
-          <h2>Email:{{user_email}}</h2>
-          <h2>Role:{{user_status}}</h2><br>
+          <h2>Email: {{user_email}}</h2>
+          <h2>Role: {{user_status}}</h2><br>
           <button id="th" type="submit"   onclick="show_popap('modal-2')" >Редактировать профиль</a></button>
           <!-- <h2>Пол: {{user_gender}}</h2> -->
         </div>
@@ -95,6 +101,7 @@ function hide(form) {
           <div class="input-form"> 
             <input pattern="\s*\S+.*"  maxlength="70" type="text" name="name" value="{{current}}" required>
             <input  type="hidden" name="id_user" value={{user_id}}>
+            <input  type="hidden" name="dash" value={{dash.id}}>
             <input pattern="\s*\S+.*"  maxlength="120" type="text" name="email" value="{{user_email}}" required><br>
             <button class="button" type="submit">Изменить</button>
         </div>
@@ -110,7 +117,7 @@ function hide(form) {
 <h2>История действий</h2><br>
 <form id="pro">
 {% for history in history_list%}
-<h4> {{history.description}} {{history.time}}</h4><br>
+<h4> {{history.description}}  <a style="float:right">  {{history.time}}</a></h4><br>
 {% endfor%}
 </form>
 </div>
@@ -132,13 +139,14 @@ function hide(form) {
         <textarea pattern="\s*\S+.*" maxlength="350" type="description" name="description" id="todo_desc" placeholder="Введите описание задачи" required></textarea> 
         <input type="hidden" name="status" id="todo_status" value="0" />
         <input type="hidden" name="activate" id="activate" value="0" />
-        <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил новую задачу"</textarea>
+        <input type="hidden" name="dash" value={{dash.id}}>{{dash.id}}</input>
+        <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил новую задачу на дашборд {{dash.dash}}"</textarea>
         <!-- <select>
           {% for usernames in role_list %}
           <option name="role" value="{{usernames.name}}">{{usernames.name}}</option>
           {% endfor %}  
         </select> -->
-        <button class="btn" type="submit" id="submit" >Add </button>
+        <button class="btn" type="submit" id="submit" >Добавить задачу </button>
       </div>
     </form>
       </div>
@@ -156,11 +164,11 @@ function hide(form) {
         {% for todo in todo_list %} 
         {% if todo.status == '0' %}
           <div class="todo" draggable="true" role="form">
-            <button id="add_btn"> {{todo.title }} </button>
+            <a id="add_btn"> {{todo.title }} </a>
             <!-- <button class="btn" type="submit" id="submit" >&#10004 </button> -->
             <input type="hidden" name="todo_id" data-id={{todo.id}} value={{todo.id}}>
             <input type="hidden" name="todo_status" data-status={{todo.status}} value='0'>
-            <a href="/show/{{ todo.id }}">&#9776</a>
+            <a href="/{{dash.id}}/show/{{ todo.id }}">&#128269;</a>
           </div>  
         {% endif %}
         {% endfor %}
@@ -171,10 +179,10 @@ function hide(form) {
         {% for todo in todo_list %} 
         {% if todo.status == '1' %}
         <div class="todo" draggable="true" role="form" >
-          <button id="add_btn"> {{todo.title }} </button>
+          <a id="add_btn"> {{todo.title }} </a>
           <input type="hidden" name="todo_id" data-id={{todo.id}}  value={{todo.id}}>
           <input type="hidden" name="todo_status" data-status={{todo.status}} value='1'>
-          <a href="/show/{{ todo.id }}">&#9776</a>
+          <a href="/{{dash.id}}/show/{{ todo.id }}">&#128269;</a>
         </div>
         {% endif %}
         {% endfor %}  
@@ -187,11 +195,11 @@ function hide(form) {
           {% for todo in todo_list %} 
           {% if todo.status == '2' %}
         <div class="todo" draggable="true" role="form">
-          <button id="add_btn"> {{todo.title }} </button>
+          <a id="add_btn"> {{todo.title }} </a>
           <!-- <button class="btn" type="submit" id="submit" >&#10004 </button> -->
           <input type="hidden" name="todo_id" data-id={{todo.id}} value={{todo.id}}>
           <input type="hidden" name="todo_status" data-status={{todo.status}} value='2'>
-          <a href="/show/{{ todo.id }}">&#9776</a>
+          <a href="/{{dash.id}}/show/{{ todo.id }}">&#128269;</a>
         </div> 
           {% endif %} 
           {% endfor %}  
@@ -203,11 +211,11 @@ function hide(form) {
           {% for todo in todo_list %} 
           {% if todo.status == '3' %}
           <div class="todo" draggable="true" role="form">
-            <button id="add_btn"> {{todo.title }} </button>
+            <a id="add_btn"> {{todo.title }} </a>
             <input type="hidden" name="todo_id" data-id={{todo.id}}  value={{todo.id}}>
             <input type="hidden" name="todo_status" data-status={{todo.status}} value='3'>
             <!-- <button class="btn" type="submit" id="submit" >&#10004 </button> -->
-            <a href="/show/{{ todo.id }}">&#9776</a>
+            <a href="/{{dash.id}}/show/{{ todo.id }}">&#128269;</a>
           </div> 
             {% endif %}
           {% endfor %} 

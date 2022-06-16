@@ -113,7 +113,7 @@ $(document).ready(function() {
 
   
   
-  <button type="button" onclick="document.location='/todo'">Назад</button>
+  <button type="button" onclick="document.location='/show_dash/{{dash.id}}'">Назад</button>
   <form class="form1">
 
     {% with messages = get_flashed_messages() %}
@@ -150,17 +150,18 @@ $(document).ready(function() {
             <form class="form" action="/add_task" method="post">
                 <div class="field">
                   <div class="input-form">
-                    <label> Добавить новые задачи для данной таски:</label>
-                    <input pattern="\s*\S+.*"  maxlength="60" type="text" name="title" placeholder="Введите название новой задачи" required><br>
+                    <label> Добавить подзадачу:</label>
+                    <input pattern="\s*\S+.*"  maxlength="60" type="text" name="title" placeholder="Введите название новой подзадачи" required><br>
                     <input type="hidden" name="id_task" value={{todo.id}}><br>
+                    <input type="hidden" name="dash" value={{dash.id}}>   
                     <textarea  type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил  новую подзадачу на {{todo.title}}"</textarea>
                   </div>
                     <form>
                       <div class="input-form">
                        <p>Выберите дату окончания задачи: 
-                        <input type="date" name="date_of_end" value="2022-06-01"
-                         max="2032-06-04" min="2022-05-16"></p>
-                <button class="button" type="submit">Add</button>
+                        <input type="date" name="date_of_end" 
+                         max="2032-06-04" min="2022-05-16" required></p>
+                <button class="button" type="submit">Добавить подзадачу</button>
               </div>
             </div>
             </form>
@@ -176,11 +177,12 @@ $(document).ready(function() {
             <form class="form" action="/update_todo" method="post">
                 <div class="field">
                   <div class="input-form">
-                    <label> Редактирование </label>
+                    <label> Редактирование задачи </label>
                     <input pattern="\s*\S+.*" maxlength="60" type="text" name="title" value="{{todo.title}}" required><br>
                     <input type="hidden" name="id_task" value={{todo.id}}><br>
+                    <input type="hidden" name="dash" value={{dash.id}}>   
                     <textarea pattern="\s*\S+.*" maxlength="350" type="text" name="description">{{todo.description}}</textarea><br><br>
-                    <button class="button" type="submit">Add</button>
+                    <button class="button" type="submit">Редактировать</button>
                   </div>
                 
               </div>
@@ -207,7 +209,7 @@ $(document).ready(function() {
                 <!-- <label>Добавить сотрудника</label> -->
                 {% if current_status == admin %}
                 <div class="input-form">
-                <input pattern="\s*\S+.*"  maxlength="120" type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
+                <input autocomplete="off" pattern="\s*\S+.*"  maxlength="120" type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
                 <datalist id="role"> 
                   
                 {% for usernames in role_list %}
@@ -217,6 +219,7 @@ $(document).ready(function() {
             </datalist>
 
             <input type="hidden" name="id_task" value={{todo.id}}><br>   
+            <input type="hidden" name="dash" value={{dash.id}}>   
             <textarea type="hidden" name="history" style="display:none;"> "Администратор {{current}} добавил сотрудника на задачу {{todo.title}}"</textarea>
             <button class="ui green button" type="submit">Добавить сотрудника</button>
             {% endif %} 
@@ -301,7 +304,7 @@ $(document).ready(function() {
                             <form class="form"  action="/delete_role" method="post"> 
                               <input type="hidden" name="name" value="{{ role.name }}"> 
                               <input type="hidden" name="id_task" value={{todo.id}}> 
-                              
+                              <input type="hidden" name="dash" value={{dash.id}}>   
                             {% if current_status == admin%}  
                               <button id="button8" type="submit">{{role.name}}</button> 
                             {%else%}
@@ -322,14 +325,15 @@ $(document).ready(function() {
 
 
                         {% if current_status == admin %}
-                        <button id="button3" onclick="document.location='/delete/{{ todo.id }}'">Удалить задачу</button>
+                        <button id="button3" onclick="document.location='/{{dash.id}}/delete/{{ todo.id }}'">Удалить задачу</button>
             
                         {% else %}  
                         <form class="form" action="/add_role" method="post">    
                         <input type="hidden" name="name" value="{{current}}">
                         <input type="hidden" name="id_task" value={{todo.id}}>   
+                        <input type="hidden" name="dash" value={{dash.id}}>   
                         {% if g != 'yes' %}
-                        <button id="button5" type="submit">Присоединиться к проекту</button>
+                        <button id="button5" type="submit">Присоединиться к задаче</button>
                         {% endif %}
                         <textarea type="hidden" name="history" style="display:none;">Пользователь {{current}} присоединился к задаче {{todo.title}}</textarea>
                         </form>  
@@ -339,6 +343,8 @@ $(document).ready(function() {
                         <form class="form" action="/check_user" method="post">    
                           <button id="button4" >Открыть мессенджер</button> 
                           <input type="hidden" name="id_task" value={{todo.id}}>   
+                          <input type="hidden" name="dash" value={{dash.id}}>   
+                          
                         </form>
                         {% endif %}
                          {% for role in role_list_u %}
@@ -348,7 +354,8 @@ $(document).ready(function() {
                          <form class="form" action="/delete_role" method="post">               
                          <input type="hidden" name="id_task" value={{todo.id}}>   
                          <input type="hidden" name="name" value="{{role.name}}">  
-                         <button id="button3" type="submit">Выйти с проекта</button> 
+                         <input type="hidden" name="dash" value={{dash.id}}> 
+                         <button id="button3" type="submit">Выйти с задачи</button> 
                         </form> 
                         {% endif %} 
                          {% endif %}
@@ -357,10 +364,10 @@ $(document).ready(function() {
                         
 
                         {% if current_status == admin %}
-                        <button id="button4" onclick="document.location='/chat/{{todo.id}}'">Открыть мессенджер</button> 
-                        <button id="button5"  onclick="show_popap('modal-1')">Добавить задачи для данной таски</a></button>   
-                        <button id="button6" onclick="show_popap('modal-2')">Добавить на проект</a></button>   
-                        <button id="button7" onclick="show_popap('modal-3')">Редактировать Задачу</a></button>   
+                        <button id="button4" onclick="document.location='/{{dash.id}}/chat/{{todo.id}}'">Открыть мессенджер</button> 
+                        <button id="button5"  onclick="show_popap('modal-1')">Добавить подзадачу</a></button>   
+                        <button id="button6" onclick="show_popap('modal-2')">Добавить нового сотрудника</a></button>   
+                        <button id="button7" onclick="show_popap('modal-3')">Редактировать задачу</a></button>   
                         {% endif %}
                           <!-- <hr> -->
 
@@ -424,12 +431,14 @@ $(document).ready(function() {
 
         {% for task in topphpframework %}
         {% if task.id_task == todo.id %}
-        <div style="background:  rgba(0,0,0,0.6);">
+        <div style="background:  rgba(0,0,0,0.6);
+        border-radius: 10px;
+        padding-bottom: 1%; margin-bottom: 1%;">
         <table >
         <tr  id="{{task.id}}" class="edit_tr">
           <td >
           <span type="tip" id="first_{{task.id}}" class="text">{{task.title_task}}</span>
-          <input type="text" name="name" value="{{task.title_task}}" class="editbox" id="first_input_{{task.id}}" required>
+          <input maxlength="50" type="text" name="name" value="{{task.title_task}}" class="editbox" id="first_input_{{task.id}}" required>
           
           {% if task.complete == False %}
           <button id="button"><span class="button">Не выполнено</span></button>
@@ -438,11 +447,11 @@ $(document).ready(function() {
           {% endif %}
           
 
-          <button id="button" onclick="document.location='/update_task/{{ task.id }}'">Обновить статус</button>
+          <button id="button" onclick="document.location='/{{dash.id}}/update_task/{{ task.id }}'">Обновить статус</button>
           <!-- <a class="button" href="/update_task/{{ task.id }}">Update</a>  -->
           {% if current_status == admin %}
           <!-- <a class="button" href="/delete_task/{{ task.id }}">Delete</a>    -->
-          <button id="button1" onclick="document.location='/delete_task/{{ task.id }}'">Удалить</button>
+          <button id="button1" onclick="document.location='/{{dash.id}}/delete_task/{{ task.id }}'">Удалить</button>
           <!-- <a><p>До: {{task.date_of_end}} </p></a>  -->
           {% endif %} 
         </td>
@@ -453,7 +462,7 @@ $(document).ready(function() {
         <form class="form" action="/update_time" method="post">
 
           <p>Дата окончания задачи: {{task.date_of_end}} </p> 
-          <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"> <input maxlength="2" id="time" name="hour" type="number" min="0" max="50"  value="{{task.hours}}"> минуты <input id="time" maxlength="2" type="number" min="0" max="59" name="minute" type="number" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
+          <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"><input  type="hidden" id="time" name="dash" value="{{dash.id}}"> <input maxlength="2" id="time" name="hour" type="number" min="0" max="50"  value="{{task.hours}}"> минуты <input id="time" maxlength="2" type="number" min="0" max="59" name="minute" type="number" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
         </div>
       </div>
         {% endif %}

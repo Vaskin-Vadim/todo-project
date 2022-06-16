@@ -51,7 +51,7 @@ location.href=location.href;
 
 <body>
   
-    <button type="button" onclick="document.location='/show/{{todo.id}}'">Назад</button>
+    <button type="button" onclick="document.location='/{{dash.id}}/show/{{todo.id}}'">Назад</button>
     <button type="button" onclick="show_popap('modal-1')">Вложения</button>   
     <button type="button" onclick="show_popap('modal-2')">Прикрепить файл</button>   
     
@@ -84,6 +84,7 @@ location.href=location.href;
             <div class="input-form">
             <input type="file" name="file" required>
             <input type="hidden" name="id_chat" value={{ todo.id }}><br> 
+            <input type="hidden" name="dash" value={{ dash.id }}><br> 
             <textarea type="hidden" name="history" style="display:none;"> "Пользователь {{current}} прикрепил вложение в чате по задаче {{todo.title}}"</textarea>
             <button id="sendButton1" type="submit" >прикрепить</button>
           </div>
@@ -102,7 +103,7 @@ location.href=location.href;
             {% if chat.id_person == user_id   %}
             <div id="{{chat.id}}"  class="edit_tr"> 
             <span> <table><tr><td id="first_{{chat.id}}" class="text">{{ chat.name }}:  {{ chat.message }}</td><th>{{chat.time}}</th></tr></span>
-            <input type="text" name="name" value="{{chat.message}}" class="editbox" id="first_input_{{chat.id}}" />
+            <input maxlength="350" type="text" name="name" value="{{chat.message}}" class="editbox" id="first_input_{{chat.id}}" />
             </table> 
         </div> 
             {% else %}

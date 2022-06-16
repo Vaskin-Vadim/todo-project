@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
     created_on = db.Column(db.DateTime(), default=datetime.utcnow)
     updated_on = db.Column(db.DateTime(), default=datetime.utcnow,  onupdate=datetime.utcnow)
     status = db.Column(db.String(150), nullable=False)
+    
 
 
     def __init__(self, name, email, password,created_on,updated_on,status):

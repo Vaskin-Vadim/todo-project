@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <link href="/static/styles2.css" rel="stylesheet" type="text/css" /> -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="/static/st.css" rel="stylesheet" type="text/css" />
+        <link href="/static/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="/static/font-awesome.min.css" rel="stylesheet" type="text/css" /> -->
+        <!-- <link href="/static/prettyPhoto.css" rel="stylesheet" type="text/css" /> -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+        <title>Todo</title>
+        <style>
+
+           </style>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".edit_tr").click(function() {
+    var ID=$(this).attr('id');
+    $("#first_"+ID).hide();
+    $("#first_input_"+ID).show();
+  }).change(function(){
+      var ID=$(this).attr('id');
+      var first=$("#first_input_"+ID).val();
+      var dataString = 'id='+ ID +'&name='+first;
+      $("#first_"+ID).html('<img src="/staticf/img/loader.gif" />');
+      if(first.length>0){
+        $.ajax({
+          type: "POST",
+          url: "/ajax4",
+          data: dataString,
+          cache: false,
+          success: function(html)
+          {
+            $("#first_"+ID).html(first);
+          }
+        });
+      }else{
+      }
+      location.href=location.href;
+  });
+     
+  $(".editbox").mouseup(function() {
+   return false
+  });
+  $(document).mouseup(function() {
+      $(".editbox").hide();
+      $(".text").show();
+  });
+});
+
+</script>
+
+      </head>
+
+  
+      <!-- <b class="button" href=""></b>	 -->
+
+<body>
+
+  <header>
+    <div class="logo"></div>
+    <div class="nav">
+      <ul>
+        <li id="show-nails">     
+          <button id="button1"style="margin-right: 1%;" onclick="document.location='/logout'">Выйти из аккаунта</button>
+      </li>
+        <!-- <li><a href="">Вы вошли как</a></li> -->
+      </ul>
+    </div>
+  </header>
+
+
+
+  <script>
+    $( document ).ready( function() {
+      var errorMessage = "Please match the requested format.";
+    
+      $( this ).find( "textarea" ).on( "input change propertychange", function() {
+    
+          var pattern = $( this ).attr( "pattern" );
+    
+          if(typeof pattern !== typeof undefined && pattern !== false)
+          {
+              var patternRegex = new RegExp( "^" + pattern.replace(/^\^|\$$/g, '') + "$", "g" );
+    
+              hasError = !$( this ).val().match( patternRegex );
+    
+              if ( typeof this.setCustomValidity === "function") 
+              {
+                  this.setCustomValidity( hasError ? errorMessage : "" );
+              } 
+              else 
+              {
+                  $( this ).toggleClass( "error", !!hasError );
+                  $( this ).toggleClass( "ok", !hasError );
+    
+                  if ( hasError ) 
+                  {
+                      $( this ).attr( "title", errorMessage );
+                  } 
+                  else
+                  {
+                      $( this ).removeAttr( "title" );
+                  }
+              }
+          }
+    
+      });
+    });
+    
+    </script>
+
+
+
+<div class="overlay" id="modal-2">
+  <div class="flex-popap">
+    <div class="popap">
+      <span class="close_popap">X</span>
+      <form class="ui form" action="/add_role_dash" method="post">
+          <!-- <label>Добавить сотрудника</label> -->
+          {% if current_status == admin %}
+          <div class="input-form">
+          <input autocomplete="off" pattern="\s*\S+.*"  maxlength="120" type="text" name="name" list="role" placeholder="Выберите сотрудника которого вы хотели бы добавить на данный проект" required>
+          <datalist id="role" > 
+          {% for usernames in role_list %}           
+          <option  name="name" value="{{usernames.name}}">{{usernames.name}}</option>
+          {% endfor %}
+      </datalist>
+        <input autocomplete="off" pattern="\s*\S+.*"  maxlength="120" type="text" name="dash" list="nerole" placeholder="Выберите дашборд" required>
+      <datalist id="nerole" > 
+        {% for dash in dash_list %}           
+        <option  name="name" value="{{dash.dash}}">{{dash.dash}}</option>
+        {% endfor %}
+    </datalist>
+      <button class="ui green button" type="submit">Добавить сотрудника</button>
+      {% endif %} 
+    </div>
+  </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  const datal = document.querySelector('#role');
+for (const option of [...datal.options]) {
+  if (option.textContent.length === 1)
+    option.remove();
+}
+</script>
+
+
+<div class="overlay" id="modal-4">
+  <div class="flex-popap">
+    <div class="popap">
+      <span class="close_popap">X</span>
+      
+<h2>Список сотрудников</h2><br>
+<form id="pro">
+{% for sotr in sotr_list%}
+<h4> {{sotr.name}}</h4><br>
+{% endfor%}
+</form>
+</div>
+  </div>
+</div>
+
+  
+  
+  <form class="form1">
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">×</span> 
+      <strong>{{ messages[0] }}</strong>
+    </div>
+    {% endif %}
+    {% endwith %}
+    </form>
+
+  <!-- <b> <a class="button" href="/todo">⇐</b></a> -->
+
+
+
+  {% with errors = get_flashed_messages(category_filter=["error"]) %}
+  {% if errors %}
+  <div class="alert-message block-message error">
+    <a class="close" href="#">×</a>
+    <ul>
+      {%- for msg in errors %}
+      <li>{{ msg }}</li>
+      {% endfor -%}
+    </ul>
+  </div>
+  {% endif %}
+  {% endwith %}
+
+    <div class="overlay" id="modal-1">
+        <div class="flex-popap">
+          <div class="popap">
+            <span class="close_popap">X</span>
+            <form class="form" action="/add_dash" method="post">
+                <div class="field">
+                  <div class="input-form">
+                    <label> Добавить новый дашборд:</label>
+                    <input pattern="\s*\S+.*"  maxlength="60" type="text" name="title" placeholder="Введите название дашборда" required><br>
+                    <!-- <input pattern="\s*\S+.*"  max=10 min=1 type="number" name="title" placeholder="Количество таблиц дашбоарда" required><br> -->
+                    <button class="button" type="submit">Добавить дашборд</button>
+                  </div>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+
+
+
+<script>
+      const datalist = document.querySelector('#role');
+      for (const option of [...datalist.options]) {
+        if (option.textContent.length === 1)
+          option.remove();
+      }
+
+</script>
+
+
+    
+    <section id="services">
+      <div class="container">
+        <div class="box first">
+            <div class="row">
+
+
+              <div class="col-md-4 col-sm-6">
+
+                <div class="center">
+                    <i class="icon-android icon-md icon-color2"></i>
+                    <h4>Вы вошли как</h4>
+{{current_name}}
+
+                </div>
+            </div><!--/.col-md-4-->
+
+          <div class="col-md-4 col-sm-6">
+
+            <div class="center">
+                <i class="icon-android icon-md icon-color4"></i>
+                <h4>Администраторы Организации</h4>
+                {% for usernames in role_list %}           
+                {%if usernames.status == admin %}
+{{usernames.name}}
+                {% endif%}
+                {% endfor %}
+
+            </div>
+        </div>   
+                <div class="col-md-4 col-sm-5">
+                  
+                    <div class="center">
+                      
+                        <i class="icon-apple icon-md icon-color1"></i>
+                        <h4>Участников Организации</h4>
+{{sotr}}
+
+
+</div>
+                </div><!--/.col-md-4-->
+                <div class="col-md-4 col-sm-6">
+
+                  <div class="center">
+                      <i  class="icon-android icon-md icon-color3"></i>
+                      <h4 >Статистика</h4>
+Количество Дашбордов: {{chis}} <br><br>
+Количество Задач: {{todo}} <br><br>
+Количество подзадач: {{task}} 
+
+                  </div>
+              </div><!--/.col-md-4-->
+
+                
+                          
+
+                    </div>
+                  
+                    
+<div class="dropdown">
+<!-- <button onclick="myFunction()" class="dropbtn">☰</button>
+  <div id="myDropdown" class="dropdown-content"> --> 
+            
+                        
+                        {% if current_status == admin %}
+                        <button id="button5"  onclick="show_popap('modal-1')">Добавить новый дашборд</a></button>   
+                        <button id="button3" onclick="show_popap('modal-2')">Добавить сотрудников к доске</a></button>   
+                        {% endif %}
+
+                     </div>
+ 
+                 
+                
+         
+
+
+
+    </section><!--/#services-->      
+
+    <section id="services1">
+        <div class="container1">
+            <div class="box first1">
+
+
+
+
+  <script>
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+    
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+    
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+    </script>
+
+<script>
+    function show_popap(id_popap) {
+      var id = "#" + id_popap;
+      $(id).addClass('active');
+    }
+    
+    $(".close_popap").click( function(){
+      $(".overlay").removeClass("active");
+    });
+    </script>
+
+
+
+{% for dash in dash_list %}
+<div style="background:  rgba(0,0,0,0.6); color:white; margin-bottom: 1%;         border-radius: 10px;
+padding-bottom: 1%;">
+<table >
+  <tr  id="{{dash.id}}" class="edit_tr">
+  <td >
+    {% if current_status == admin %}
+  <span type="tip" id="first_{{dash.id}}" class="text">{{dash.dash}}</span>
+  <input maxlength="50" type="text" name="name" value="{{dash.dash}}" class="editbox" id="first_input_{{dash.id}}" required>
+  {% endif %}
+  {% if current_status != admin %}
+  <p >{{dash.dash}}</p>
+  {% endif %}
+
+
+  {% if current_status == admin %}
+  <button id="button1" onclick="document.location='/delete_dashboard/{{ dash.id }}'">Удалить</button>
+  {%endif%}
+  
+  {% if current_status == admin %}
+  <button id="button2" onclick="document.location='/show_dash/{{ dash.id }}'">Открыть</button>
+  {% endif %}
+  
+  {% if current_status != admin %}
+  <form class="form" action="/check_dash_user" method="post">    
+    <button id="button2" >Открыть Dashboard</button> 
+    <input type="hidden" name="dash" value={{dash.id}}>     
+  </form>
+  {% endif %}
+
+
+  <select name="users" style="
+  color: #fff;
+  /* font-size: 20px; */
+  background: none;
+  outline: none;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  width: 30%;float: right; padding-bottom: 0.6%;">
+    <option style="color: white; background:black" >Список сотрудников</option>
+    {% for sotr in sotr_list %}
+    {%if sotr.id_dash == dash.id%}
+    <option style="color: white; background:black">{{sotr.name}}</option>
+    {% endif %}
+    {% endfor %}
+
+  </select>
+</td>
+</tr>
+</table>
+
+</div>
+{% endfor %}
+
+
+
+
+    </div>
+    </div>
+
+
+
+    
+
+     -->
+    </div><!--/.col-md-4-->
+                    
+
+</div><!--/.row-->
+
+</section><!--/#services-->    
+
+<script>
+  function show_popap(id_popap) {
+    var id = "#" + id_popap;
+    $(id).addClass('active');
+  }
+  
+  $(".close_popap").click( function(){
+    $(".overlay").removeClass("active");
+  });
+  </script>
+
+    <script src="/static/scriptfortodo.js"></script>
+  </body>
+</html>

@@ -6,6 +6,7 @@ body {
   background: linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)), url(../static/images/666.jpg); 
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 background-attachment: fixed;
+background-size: cover;
 }
 
 .head{
@@ -95,7 +96,6 @@ p #time{
 #add_btn {
   color:#fff;
   text-align: center;
-  padding: 0.5rem 1rem;
   /* background-color: rgb(255, 255, 255); */
   background: rgba(0,0,0,0);
   outline: none;
@@ -130,6 +130,7 @@ p #time{
   padding: 0.5rem 1rem;
   font-size: 1.5rem;
   margin: 0.5rem 0;
+  padding: 9%;
 }
 
 .todo .close {
@@ -152,6 +153,7 @@ p #time{
   border: none;
   font-size: 1.5rem;
   color: #fff;
+  cursor: pointer;
 }
 
 .modal {
@@ -189,6 +191,7 @@ a:-webkit-any-link {
   color: white;
   cursor: pointer;
   text-decoration: auto; 
+  float:right;
 }
 
 #overlay {
@@ -349,6 +352,7 @@ header li a {
   font-weight: 700;
   letter-spacing: 1px;
   font: normal 62.5% "proxima-nova-alt", Helvetica, Arial, sans-serif;
+  cursor: pointer;
 }
 
 header li b {
@@ -468,6 +472,7 @@ img {
 	outline: none;
 	border: 1px solid #fff;
 	box-sizing: border-box;
+
 }
 
 .input-form textarea {
@@ -504,6 +509,7 @@ form #pro{
 	transition: .3s;
 	padding: 7px;
 	width: 101%;
+  cursor: pointer;
 }
 
 .input-form button[type="submit"]:hover {
