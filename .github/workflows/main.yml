@@ -27,4 +27,4 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with:
           config: ${{ secrets.KUBECONFIG }}
-          command: -n todo patch deployment todo-all -p '{"spec":{ "template":{ "metadata":{ "labels":{  "redeploy":"'$(date +%s)'" }}}}}'
+          command: -n todo-diplom patch deployment todo-diplom-web -p '{"spec":{ "template":{ "metadata":{ "labels":{  "redeploy":"'$(date +%s)'" }}}}}'
