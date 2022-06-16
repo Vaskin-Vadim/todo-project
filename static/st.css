@@ -1039,6 +1039,23 @@ button[id="button1"] {
 	background: #2e0505;
 }
 
+button[id="button9"] {
+  margin-left: 12px;  
+  /* margin-right: 1%;   */
+	color: #fff;
+	/* font-weight: bold;
+	text-transform: uppercase; */
+	border: none;
+	background: #58ca0c;
+	transition: .3s;
+	padding: 5px;
+  float: right;
+	/* width: 100%; */
+}
+ button[id="button9"]:hover {
+	background: #0a2e05;
+}
+
 
 button[id="button2"] {
   margin-left: 12px;  
