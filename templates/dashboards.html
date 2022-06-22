@@ -266,7 +266,7 @@ for (const option of [...datal.options]) {
                 <h4>Администраторы Организации</h4>
                 {% for usernames in role_list %}           
                 {%if usernames.status == admin %}
-{{usernames.name}}
+{{usernames.name}} <br>
                 {% endif%}
                 {% endfor %}
 
@@ -380,7 +380,7 @@ padding-bottom: 1%;">
 
 
   {% if current_status == admin %}
-  <button id="button1" onclick="document.location='/delete_dashboard/{{ dash.id }}'">Удалить</button>
+  <button id="button1" onclick="document.location='/delete_dashboard/{{ dash.id }}'">&#10006;</button>
   {%endif%}
   
   {% if current_status == admin %}

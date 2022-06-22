@@ -439,7 +439,11 @@ $(document).ready(function() {
           <td >
           <span type="tip" id="first_{{task.id}}" class="text">{{task.title_task}}</span>
           <input maxlength="50" type="text" name="name" value="{{task.title_task}}" class="editbox" id="first_input_{{task.id}}" required>
-          
+          {% if current_status == admin %}
+          <!-- <a class="button" href="/delete_task/{{ task.id }}">Delete</a>    -->
+          <button id="button1" onclick="document.location='/{{dash.id}}/delete_task/{{ task.id }}'">&#10006;</button>
+          <!-- <a><p>До: {{task.date_of_end}} </p></a>  -->
+          {% endif %} 
           {% if task.complete == False %}
           <button id="button"><span class="button">Не выполнено</span></button>
           {% else %}
@@ -449,11 +453,7 @@ $(document).ready(function() {
 
           <button id="button" onclick="document.location='/{{dash.id}}/update_task/{{ task.id }}'">Обновить статус</button>
           <!-- <a class="button" href="/update_task/{{ task.id }}">Update</a>  -->
-          {% if current_status == admin %}
-          <!-- <a class="button" href="/delete_task/{{ task.id }}">Delete</a>    -->
-          <button id="button1" onclick="document.location='/{{dash.id}}/delete_task/{{ task.id }}'">Удалить</button>
-          <!-- <a><p>До: {{task.date_of_end}} </p></a>  -->
-          {% endif %} 
+
         </td>
       </tr>
         </table>
@@ -462,7 +462,7 @@ $(document).ready(function() {
         <form class="form" action="/update_time" method="post">
 
           <p>Дата окончания задачи: {{task.date_of_end}} </p> 
-          <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"><input  type="hidden" id="time" name="dash" value="{{dash.id}}"> <input maxlength="2" id="time" name="hour" type="number" min="0" max="50"  value="{{task.hours}}"> минуты <input id="time" maxlength="2" type="number" min="0" max="59" name="minute" type="number" value="{{task.minutes}}"> <button id="req"  type="submit">Отметить</button></p>  </form>      
+          <p >Времени потрачено     часы:  <input maxlength="2" id="time" type="hidden" name="todo_id" value="{{todo.id}}"> <input  type="hidden" id="time" name="task_id" value="{{task.id}}"><input  type="hidden" id="time" name="dash" value="{{dash.id}}"> <input maxlength="2" id="time" name="hour" type="number" min="0" max="50"  value="{{task.hours}}"> минуты <input id="time" maxlength="2" type="number" min="0" max="59" name="minute" type="number" value="{{task.minutes}}"> <button id="req"  type="submit">		&#10004;</button></p>  </form>      
         </div>
       </div>
         {% endif %}

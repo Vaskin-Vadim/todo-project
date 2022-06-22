@@ -938,7 +938,7 @@ button[type="button"] {
 
 .input-form input[id="time"] {
 	padding: 10px;
-	width: 10%;
+	width: max-content;
 	color: #fff;
 	/* font-size: 20px; */
 	background: none;
@@ -977,7 +977,7 @@ button[type="button"] {
 	background: #0fc3f5;
 	transition: .3s;
 	padding: 10px;
-	width: 14%; 
+	width: 6%; 
 }
 
 .input-form button[id="req"]:hover {
